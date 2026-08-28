@@ -1,23 +1,39 @@
-<section class="carta-real">
-    <div class="container">
-        <h2 class="section-title">📋 NUESTRA CARTA</h2>
+.carta-real{
+    background:#111;
+    padding:50px 0;
+}
 
-        <p class="carta-texto">
-            Conoce todos nuestros productos y especialidades.
-        </p>
+.carta-texto{
+    text-align:center;
+    color:#aaa;
+    margin-top:-15px;
+    margin-bottom:30px;
+}
 
-        <div class="carta-imagenes">
+.carta-imagenes{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:25px;
+    max-width:1000px;
+    margin:auto;
+}
 
-            <img
-                src="IMG-20260828-WA0008.jpg"
-                alt="Carta El Imperio Burger - página 1"
-            >
+.carta-imagenes img{
+    width:100%;
+    height:auto;
+    display:block;
+    border-radius:15px;
+    border:2px solid #f5a623;
+    box-shadow:0 10px 35px rgba(0,0,0,.5);
+}
 
-            <img
-                src="IMG-20260704-WA0015(1).jpg"
-                alt="Carta El Imperio Burger - página 2"
-            >
+@media(max-width:700px){
+    .carta-imagenes{
+        grid-template-columns:1fr;
+        gap:18px;
+    }
 
-        </div>
-    </div>
-</section>
+    .carta-imagenes img{
+        border-radius:10px;
+    }
+}
