@@ -7,288 +7,328 @@
 
 <style>
 *{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#0d0d0d;
-  color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#0b0b0b;
+    color:#fff;
 }
 
 header{
-  background:#050505;
-  text-align:center;
-  padding:25px 15px;
-  border-bottom:2px solid #f5a623;
-  position:sticky;
-  top:0;
-  z-index:100;
+    background:#050505;
+    padding:20px;
+    text-align:center;
+    border-bottom:2px solid #f5a623;
+    position:sticky;
+    top:0;
+    z-index:1000;
 }
 
 .logo{
-  font-size:32px;
-  font-weight:900;
-  color:#f5a623;
+    font-size:32px;
+    font-weight:900;
+    color:#ffad18;
 }
 
 .logo span{
-  font-size:38px;
+    font-size:34px;
 }
 
-.subtitle{
-  margin-top:6px;
-  color:#ddd;
-  font-size:16px;
+.slogan{
+    margin-top:5px;
+    color:#ddd;
+    font-size:15px;
+}
+
+nav{
+    margin-top:15px;
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+nav a{
+    color:#fff;
+    text-decoration:none;
+    background:#191919;
+    padding:9px 13px;
+    border-radius:20px;
+    font-size:13px;
+}
+
+nav a:hover{
+    background:#f5a623;
+    color:#111;
 }
 
 .hero{
-  min-height:420px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:50px 20px;
-  background:
-    radial-gradient(circle at center,#4a2108 0%,#241207 45%,#100b08 100%);
+    min-height:430px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:50px 20px;
+    background:
+      radial-gradient(circle at center,#572900 0%,#241208 45%,#100c09 100%);
 }
 
 .hero h1{
-  font-size:48px;
-  margin-bottom:15px;
+    font-size:48px;
+    margin-bottom:15px;
 }
 
 .hero p{
-  font-size:20px;
-  color:#ddd;
-  margin-bottom:28px;
+    color:#ddd;
+    font-size:20px;
+    margin-bottom:25px;
 }
 
 .btn{
-  border:0;
-  background:#f5a623;
-  color:#111;
-  padding:15px 28px;
-  border-radius:10px;
-  font-size:17px;
-  font-weight:bold;
-  cursor:pointer;
+    display:inline-block;
+    background:#ffad18;
+    color:#111;
+    border:none;
+    padding:14px 28px;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+    text-decoration:none;
+    font-size:16px;
 }
 
 .btn:hover{
-  transform:scale(1.03);
+    background:#ffc14d;
+    transform:scale(1.03);
 }
 
-.menu{
-  max-width:1200px;
-  margin:auto;
-  padding:45px 18px 120px;
+.container{
+    width:94%;
+    max-width:1200px;
+    margin:auto;
 }
 
-.menu-title{
-  text-align:center;
-  color:#f5a623;
-  font-size:32px;
-  margin-bottom:30px;
+.section{
+    padding:45px 0;
+}
+
+.section-title{
+    text-align:center;
+    color:#ffad18;
+    font-size:30px;
+    margin-bottom:25px;
 }
 
 .search{
-  width:100%;
-  max-width:600px;
-  display:block;
-  margin:0 auto 35px;
-  padding:15px 18px;
-  border-radius:10px;
-  border:1px solid #555;
-  background:#181818;
-  color:#fff;
-  font-size:16px;
+    width:100%;
+    max-width:600px;
+    display:block;
+    margin:0 auto 30px;
+    padding:15px;
+    border-radius:10px;
+    border:1px solid #444;
+    background:#171717;
+    color:#fff;
+    font-size:16px;
 }
 
-.category{
-  margin-bottom:45px;
+.category-title{
+    color:#ffad18;
+    font-size:24px;
+    margin:35px 0 18px;
+    border-left:5px solid #ffad18;
+    padding-left:12px;
 }
 
-.category h2{
-  color:#f5a623;
-  border-bottom:1px solid #6b4218;
-  padding-bottom:10px;
-  margin-bottom:20px;
-  font-size:27px;
-}
-
-.products{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
+.menu-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:18px;
 }
 
 .card{
-  background:#181818;
-  border:1px solid #292929;
-  border-radius:14px;
-  padding:20px;
-  transition:.2s;
+    background:linear-gradient(145deg,#191919,#101010);
+    border:1px solid #292929;
+    border-radius:15px;
+    padding:20px;
+    transition:.25s;
 }
 
 .card:hover{
-  border-color:#f5a623;
-  transform:translateY(-3px);
+    transform:translateY(-5px);
+    border-color:#ffad18;
+    box-shadow:0 10px 30px rgba(255,173,24,.12);
 }
 
 .card h3{
-  color:#fff;
-  font-size:20px;
-  margin-bottom:8px;
+    color:#fff;
+    font-size:20px;
+    margin-bottom:8px;
 }
 
 .description{
-  color:#aaa;
-  min-height:48px;
-  font-size:14px;
-  line-height:1.4;
+    color:#aaa;
+    font-size:14px;
+    line-height:1.5;
+    min-height:60px;
 }
 
 .price{
-  color:#f5a623;
-  font-size:22px;
-  font-weight:bold;
-  margin:15px 0;
+    color:#ffad18;
+    font-size:23px;
+    font-weight:bold;
+    margin:15px 0;
 }
 
 .add{
-  width:100%;
-  padding:12px;
-  background:#f5a623;
-  border:0;
-  border-radius:8px;
-  font-weight:bold;
-  cursor:pointer;
+    width:100%;
+    background:#ffad18;
+    border:0;
+    padding:11px;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.add:hover{
+    background:#ffc14d;
 }
 
 .promo{
-  background:linear-gradient(135deg,#f5a623,#9d5100);
-  color:#111;
-  padding:25px;
-  border-radius:15px;
-  text-align:center;
-  margin:20px 0 45px;
+    background:linear-gradient(135deg,#7d3c00,#e99100);
+    padding:25px;
+    text-align:center;
+    border-radius:15px;
+    margin:25px 0;
 }
 
 .promo h2{
-  font-size:25px;
-  margin-bottom:8px;
+    color:#fff;
+    margin-bottom:8px;
 }
 
-.cart-button{
-  position:fixed;
-  right:20px;
-  bottom:20px;
-  z-index:200;
-  background:#f5a623;
-  color:#111;
-  border:0;
-  border-radius:50px;
-  padding:16px 22px;
-  font-size:17px;
-  font-weight:bold;
-  box-shadow:0 5px 25px #000;
-  cursor:pointer;
+.cart{
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    z-index:2000;
+    background:#ffad18;
+    color:#111;
+    border:0;
+    padding:15px 20px;
+    border-radius:30px;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 5px 25px #000;
 }
 
-#cartCount{
-  background:#d60000;
-  color:white;
-  padding:3px 8px;
-  border-radius:20px;
-  margin-left:5px;
+.cart span{
+    background:#111;
+    color:#fff;
+    padding:4px 8px;
+    border-radius:50%;
+    margin-left:5px;
 }
 
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.8);
-  z-index:300;
-  padding:20px;
-  overflow:auto;
+.cart-panel{
+    position:fixed;
+    right:0;
+    top:0;
+    height:100%;
+    width:360px;
+    max-width:95%;
+    background:#111;
+    z-index:3000;
+    padding:25px;
+    transform:translateX(100%);
+    transition:.3s;
+    box-shadow:-10px 0 30px #000;
+    overflow-y:auto;
 }
 
-.modal-box{
-  max-width:600px;
-  margin:30px auto;
-  background:#171717;
-  border:1px solid #444;
-  border-radius:15px;
-  padding:25px;
+.cart-panel.open{
+    transform:translateX(0);
 }
 
-.modal-box h2{
-  color:#f5a623;
-  margin-bottom:20px;
+.cart-panel h2{
+    color:#ffad18;
+    margin-bottom:20px;
 }
 
 .close{
-  float:right;
-  background:none;
-  border:0;
-  color:white;
-  font-size:25px;
-  cursor:pointer;
+    float:right;
+    background:#333;
+    color:#fff;
+    border:0;
+    padding:7px 12px;
+    border-radius:6px;
+    cursor:pointer;
 }
 
 .cart-item{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding:14px 0;
-  border-bottom:1px solid #333;
+    border-bottom:1px solid #333;
+    padding:12px 0;
 }
 
-.qty button{
-  width:30px;
-  height:30px;
-  border:0;
-  border-radius:5px;
-  cursor:pointer;
+.cart-total{
+    font-size:24px;
+    color:#ffad18;
+    font-weight:bold;
+    margin:20px 0;
 }
 
-.total{
-  text-align:right;
-  font-size:24px;
-  color:#f5a623;
-  font-weight:bold;
-  margin:20px 0;
-}
-
-input,textarea,select{
-  width:100%;
-  padding:13px;
-  margin:7px 0;
-  background:#0d0d0d;
-  border:1px solid #444;
-  color:white;
-  border-radius:8px;
-}
-
-textarea{
-  min-height:80px;
+.whatsapp{
+    display:block;
+    text-align:center;
+    background:#25d366;
+    color:#fff;
+    padding:14px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:bold;
 }
 
 footer{
-  background:#050505;
-  text-align:center;
-  padding:30px;
-  color:#aaa;
+    background:#050505;
+    text-align:center;
+    padding:30px 15px;
+    margin-top:30px;
+    border-top:1px solid #292929;
+    color:#aaa;
+}
+
+footer strong{
+    color:#ffad18;
 }
 
 @media(max-width:600px){
-  .logo{font-size:25px}
-  .hero h1{font-size:34px}
-  .hero p{font-size:17px}
-  .menu-title{font-size:27px}
+    .logo{
+        font-size:25px;
+    }
+
+    .hero h1{
+        font-size:34px;
+    }
+
+    .hero p{
+        font-size:17px;
+    }
+
+    .section-title{
+        font-size:25px;
+    }
+
+    .cart-panel{
+        width:100%;
+    }
 }
 </style>
 </head>
@@ -296,104 +336,700 @@ footer{
 <body>
 
 <header>
-  <div class="logo">🍔 EL IMPERIO BURGER</div>
-  <div class="subtitle">El sabor que manda</div>
+    <div class="logo">🍔 EL IMPERIO BURGER</div>
+    <div class="slogan">El sabor que manda</div>
+
+    <nav>
+        <a href="#hamburguesas">Hamburguesas</a>
+        <a href="#salchipapas">Salchipapas</a>
+        <a href="#perros">Perros</a>
+        <a href="#burritos">Burritos</a>
+        <a href="#especiales">Platos</a>
+        <a href="#bebidas">Bebidas</a>
+        <a href="#entradas">Entradas</a>
+    </nav>
 </header>
 
 <section class="hero">
-  <div>
-    <h1>Bienvenido al Imperio</h1>
-    <p>Las mejores hamburguesas, directamente a tu puerta.</p>
-    <button class="btn" onclick="document.getElementById('menu').scrollIntoView()">
-      VER MENÚ
-    </button>
-  </div>
+    <div>
+        <h1>Bienvenido al Imperio 👑</h1>
+        <p>Las mejores hamburguesas, directamente a tu puerta.</p>
+        <a href="#menu" class="btn">VER MENÚ</a>
+    </div>
 </section>
 
-<main class="menu" id="menu">
+<main id="menu" class="container section">
 
-<h2 class="menu-title">NUESTRO MENÚ</h2>
+<h2 class="section-title">🍔 NUESTRO MENÚ</h2>
 
 <input
-  type="text"
-  id="search"
-  class="search"
-  placeholder="🔎 Buscar hamburguesa, papas, bebida..."
-  oninput="buscar()"
+    type="text"
+    id="search"
+    class="search"
+    placeholder="Buscar hamburguesa, papas, bebida..."
 >
 
 <div class="promo">
-  <h2>🎉 PROMOCIÓN PARA CUMPLEAÑEROS</h2>
-  <p>Por compras mayores a <strong>$47.000</strong>, el cumpleañero tiene un combo gratis.</p>
+    <h2>🎉 PROMOCIÓN PARA CUMPLEAÑEROS</h2>
+    <p>Por compras mayores a <strong>$47.000</strong>, el cumpleañero tiene un combo GRATIS.</p>
 </div>
 
-<div id="productos"></div>
+<!-- HAMBURGUESAS -->
+<h2 id="hamburguesas" class="category-title">🍔 HAMBURGUESAS</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Artesanal</h3>
+<p class="description">Pan artesanal, carne de res, queso, maíz, lechuga y tomate.</p>
+<div class="price">$8.000</div>
+<button class="add" onclick="addToCart('Artesanal',8000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Sencilla</h3>
+<p class="description">Pan artesanal, carne de res, tocineta, queso, maíz, aro de cebolla.</p>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Sencilla',10000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Imperio</h3>
+<p class="description">Pan artesanal, carne de res, tocineta, queso, maíz, aro de cebolla y papa a la francesa.</p>
+<div class="price">$15.000</div>
+<button class="add" onclick="addToCart('Imperio',15000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Criolla</h3>
+<p class="description">Pan artesanal, huevo, pollo desmechado, carne de res, tocineta, queso, maíz, aro de cebolla y carne de hamburguesa.</p>
+<div class="price">$15.000</div>
+<button class="add" onclick="addToCart('Criolla',15000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Tóxica</h3>
+<p class="description">Pan artesanal, doble carne de res, tocineta, queso, maíz, aro de cebolla, papa a la francesa y bebida.</p>
+<div class="price">$20.000</div>
+<button class="add" onclick="addToCart('Tóxica',20000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>La Ardida</h3>
+<p class="description">Pan artesanal, carne de hamburguesa, butifarra, jalapeño, queso, nachos y salsa de la casa.</p>
+<div class="price">$17.000</div>
+<button class="add" onclick="addToCart('La Ardida',17000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Deprimida</h3>
+<p class="description">Pan artesanal, doble carne, queso, aro de cebolla, maíz y papa a la francesa.</p>
+<div class="price">$18.000</div>
+<button class="add" onclick="addToCart('Deprimida',18000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Salchiburger</h3>
+<p class="description">Papa a la francesa, papa criolla, chorizo, hamburguesa sencilla, doble queso, maíz y papa ripio.</p>
+<div class="price">$25.000</div>
+<button class="add" onclick="addToCart('Salchiburger',25000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- SALCHIPAPAS -->
+<h2 id="salchipapas" class="category-title">🍟 SALCHIPAPAS</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Especial</h3>
+<p class="description">Papa a la francesa, papa criolla, chorizo, carne desmechada, pollo desmechado, maduro picado, doble queso, maíz y papa ripio.</p>
+<div class="price">$25.000</div>
+<button class="add" onclick="addToCart('Salchipapa Especial',25000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Mazorcada</h3>
+<p class="description">Pollo, carne, salchicha americana, queso, maíz y tierno.</p>
+<div class="price">$20.000</div>
+<button class="add" onclick="addToCart('Mazorcada',20000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>De la Casa</h3>
+<p class="description">Papa a la francesa, papa criolla, chorizo, carne desmechada, pollo desmechado, maduro picado, doble queso, maíz, costilla y papa ripio.</p>
+<div class="price">$40.000</div>
+<button class="add" onclick="addToCart('Salchipapa De la Casa',40000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Monster</h3>
+<p class="description">Papa a la francesa, chorizo, carne y una combinación especial de la casa.</p>
+<div class="price">$60.000</div>
+<button class="add" onclick="addToCart('Monster',60000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- PERROS -->
+<h2 id="perros" class="category-title">🌭 PERROS</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Perro</h3>
+<p class="description">Pan, lechuga, tomate, plátano picado, guacamole, salchicha, queso y maíz.</p>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Perro',10000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- BURRITOS -->
+<h2 id="burritos" class="category-title">🌯 BURRITOS</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Burrito de Pollo</h3>
+<p class="description">Tortilla rellena de pollo desmechado.</p>
+<div class="price">$15.000</div>
+<button class="add" onclick="addToCart('Burrito de Pollo',15000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Burrito de Carne</h3>
+<p class="description">Tortilla rellena de carne desmechada.</p>
+<div class="price">$15.000</div>
+<button class="add" onclick="addToCart('Burrito de Carne',15000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- PLATOS ESPECIALES -->
+<h2 id="especiales" class="category-title">🥩 PLATOS ESPECIALES</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Platos Especiales</h3>
+<p class="description">Lomo de cerdo en salsa de vino, churrasco, pechuga gratinada, costillas BBQ, alitas BBQ o camarones al ajillo.</p>
+<div class="price">$30.000</div>
+<button class="add" onclick="addToCart('Plato Especial',30000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Crepe Dulce con Frutas</h3>
+<p class="description">Crepe dulce acompañado con frutas.</p>
+<div class="price">$15.000</div>
+<button class="add" onclick="addToCart('Crepe Dulce con Frutas',15000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Crepe Mixto</h3>
+<p class="description">Crepe mixto de carne y pollo.</p>
+<div class="price">$18.000</div>
+<button class="add" onclick="addToCart('Crepe Mixto',18000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- SANDWICH -->
+<h2 class="category-title">🥪 SÁNDWICH</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Carne o Pollo</h3>
+<p class="description">Sándwich de carne o pollo.</p>
+<div class="price">$8.000</div>
+<button class="add" onclick="addToCart('Sándwich Carne o Pollo',8000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Mixto Carne y Pollo</h3>
+<p class="description">Sándwich mixto de carne y pollo.</p>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Sándwich Mixto',10000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- COMBOS -->
+<h2 class="category-title">🍔 COMBOS</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Combo Malteada + Hamburguesa Sencilla</h3>
+<p class="description">Malteada acompañada de hamburguesa sencilla.</p>
+<div class="price">$20.000</div>
+<button class="add" onclick="addToCart('Combo Malteada + Hamburguesa',20000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Combo Malteada + Sándwich</h3>
+<p class="description">Malteada acompañada de sándwich.</p>
+<div class="price">$20.000</div>
+<button class="add" onclick="addToCart('Combo Malteada + Sándwich',20000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- BEBIDAS -->
+<h2 id="bebidas" class="category-title">🥤 BEBIDAS</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Limonada de Coco</h3>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Limonada de Coco',10000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Limonada Yerbabuena</h3>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Limonada Yerbabuena',10000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Limonada Natural</h3>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Limonada Natural',10000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Limonada Cerveza</h3>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Limonada Cerveza',10000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Limonada Piña Colada</h3>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Limonada Piña Colada',10000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Limonada Frutos Rojos</h3>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Limonada Frutos Rojos',10000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Limonada Mango Biche</h3>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Limonada Mango Biche',10000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Limonada de Sandía</h3>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Limonada de Sandía',10000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Granizado de Café</h3>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Granizado de Café',10000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Nevado de Café</h3>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Nevado de Café',10000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- MALTEADAS -->
+<h2 class="category-title">🥛 MALTEADAS</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Willy Wonka</h3>
+<div class="price">$14.000</div>
+<button class="add" onclick="addToCart('Malteada Willy Wonka',14000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Cookie & Cream</h3>
+<div class="price">$14.000</div>
+<button class="add" onclick="addToCart('Malteada Cookie & Cream',14000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Brownie</h3>
+<div class="price">$14.000</div>
+<button class="add" onclick="addToCart('Malteada Brownie',14000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Frutos Rojos</h3>
+<div class="price">$14.000</div>
+<button class="add" onclick="addToCart('Malteada Frutos Rojos',14000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- SODAS ITALIANAS -->
+<h2 class="category-title">🧋 SODAS ITALIANAS</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Protocolo</h3>
+<div class="price">$12.000</div>
+<button class="add" onclick="addToCart('Soda Italiana Protocolo',12000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Frutos Amarillos</h3>
+<div class="price">$12.000</div>
+<button class="add" onclick="addToCart('Soda Italiana Frutos Amarillos',12000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Frutos Verdes</h3>
+<div class="price">$12.000</div>
+<button class="add" onclick="addToCart('Soda Italiana Frutos Verdes',12000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Frutos Rojos</h3>
+<div class="price">$12.000</div>
+<button class="add" onclick="addToCart('Soda Italiana Frutos Rojos',12000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- MICHELADAS -->
+<h2 class="category-title">🍺 MICHELADAS</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Cerveza</h3>
+<div class="price">$9.500</div>
+<button class="add" onclick="addToCart('Michelada Cerveza',9500)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Soda</h3>
+<div class="price">$7.500</div>
+<button class="add" onclick="addToCart('Michelada Soda',7500)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Ginger</h3>
+<div class="price">$8.000</div>
+<button class="add" onclick="addToCart('Michelada Ginger',8000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- COCTELES -->
+<h2 class="category-title">🍹 CÓCTELES</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Mojito</h3>
+<div class="price">$14.000</div>
+<button class="add" onclick="addToCart('Mojito',14000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Margarita</h3>
+<div class="price">$14.000</div>
+<button class="add" onclick="addToCart('Margarita',14000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Daiquiri</h3>
+<div class="price">$14.000</div>
+<button class="add" onclick="addToCart('Daiquiri',14000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Tres Cordilleras</h3>
+<div class="price">$13.000</div>
+<button class="add" onclick="addToCart('Tres Cordilleras',13000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- HELADERIA -->
+<h2 class="category-title">🍓 HELADERÍA</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Fresas con Crema</h3>
+<div class="price">$10.000</div>
+<button class="add" onclick="addToCart('Fresas con Crema',10000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- WAFFLES -->
+<h2 class="category-title">🧇 WAFFLES</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Waffle Sencillo</h3>
+<div class="price">$14.000</div>
+<button class="add" onclick="addToCart('Waffle Sencillo',14000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Waffle Burbuja</h3>
+<div class="price">$16.000</div>
+<button class="add" onclick="addToCart('Waffle Burbuja',16000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- ENTRADAS -->
+<h2 id="entradas" class="category-title">🍟 ENTRADAS</h2>
+
+<div class="menu-grid">
+
+<div class="card">
+<h3>Nachos</h3>
+<div class="price">$15.000</div>
+<button class="add" onclick="addToCart('Nachos',15000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Mini Tacos</h3>
+<div class="price">$8.000</div>
+<button class="add" onclick="addToCart('Mini Tacos',8000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Mini Empanadas</h3>
+<div class="price">$7.000</div>
+<button class="add" onclick="addToCart('Mini Empanadas',7000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Nuggets de Pollo</h3>
+<div class="price">$7.000</div>
+<button class="add" onclick="addToCart('Nuggets de Pollo',7000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Aros Apanados</h3>
+<div class="price">$6.000</div>
+<button class="add" onclick="addToCart('Aros Apanados',6000)">Agregar</button>
+</div>
+
+</div>
 
 </main>
 
-<button class="cart-button" onclick="abrirCarrito()">
-  🛒 Carrito <span id="cartCount">0</span>
+<!-- CARRITO -->
+<button class="cart" onclick="openCart()">
+🛒 Carrito <span id="cartCount">0</span>
 </button>
 
-<div class="modal" id="modal">
-  <div class="modal-box">
+<div id="cartPanel" class="cart-panel">
 
-    <button class="close" onclick="cerrarCarrito()">×</button>
+<button class="close" onclick="closeCart()">✕</button>
 
-    <h2>🛒 Tu pedido</h2>
+<h2>🛒 Tu pedido</h2>
 
-    <div id="cartItems"></div>
+<div id="cartItems">
+    <p style="color:#aaa">Tu carrito está vacío.</p>
+</div>
 
-    <div class="total">
-      Total: $<span id="total">0</span>
-    </div>
+<div class="cart-total">
+Total: $<span id="cartTotal">0</span>
+</div>
 
-    <h2>Datos del pedido</h2>
+<a
+    id="whatsappButton"
+    class="whatsapp"
+    href="#"
+    target="_blank"
+>
+📲 PEDIR POR WHATSAPP
+</a>
 
-    <input id="nombre" placeholder="Nombre">
-
-    <input id="telefono" placeholder="Teléfono">
-
-    <input id="direccion" placeholder="Dirección de entrega">
-
-    <textarea id="observaciones"
-      placeholder="Observaciones del pedido"></textarea>
-
-    <button class="btn" style="width:100%;margin-top:10px"
-      onclick="enviarPedido()">
-      📲 ENVIAR PEDIDO POR WHATSAPP
-    </button>
-
-  </div>
 </div>
 
 <footer>
-  <strong>🍔 EL IMPERIO BURGER</strong>
-  <p>El sabor que manda</p>
-  <p>Gracias por elegirnos.</p>
+    <p><strong>🍔 EL IMPERIO BURGER</strong></p>
+    <p>El sabor que manda</p>
+    <br>
+    <p>© 2026 El Imperio Burger. Todos los derechos reservados.</p>
 </footer>
 
 <script>
 
-const menu = [
+let cart = [];
 
-{
-categoria:"🍔 HAMBURGUESAS",
-productos:[
-["Artesanal",8000,"Pan artesanal, carne de res, queso, maíz, lechuga y tomate"],
-["Sencilla",10000,"Pan artesanal, carne de res, tocineta, queso, maíz y aro de cebolla"],
-["Imperio",15000,"Pan artesanal, carne de res, tocineta, queso, maíz, aro de cebolla y papa a la francesa"],
-["Criolla",15000,"Pan artesanal, huevo, pollo desmechado, carne de res, tocineta, queso, maíz, aro de cebolla, carne de hamburguesa y lechuga"],
-["Tóxica",20000,"Pan artesanal, doble carne de res, tocineta, queso, maíz, aro de cebolla, papa a la francesa y bebida"],
-["La Ardida",17000,"Pan artesanal, carne de hamburguesa, butifarra, jalapeño, queso, nachos y salsa de la casa"],
-["Deprimida",18000,"Pan artesanal, doble carne, queso, aro de cebolla, maíz y papa a la francesa"],
-["Salchiburger",25000,"Papa a la francesa, papa criolla, chorizo, hamburguesa sencilla, doble queso, maíz y papa ripio"]
-]
-},
+function formatPrice(value){
+    return value.toLocaleString('es-CO');
+}
 
-{
-categoria:"🍟 SALCHIPAPAS",
-productos:[
-["Especial",25000,"Papa a la francesa, papa criolla, chorizo, carne desmechada, pollo desmechado, maduro picado, doble queso, maíz y papa ripio"],
-["Mazorcada",20000,"Pollo, carne, salchicha americana, queso, maíz y tierno"],
-["De la Casa",40000,"Papa
+function addToCart(name,price){
+
+    const existing = cart.find(item => item.name === name);
+
+    if(existing){
+        existing.quantity++;
+    }else{
+        cart.push({
+            name:name,
+            price:price,
+            quantity:1
+        });
+    }
+
+    updateCart();
+    openCart();
+}
+
+function removeFromCart(name){
+
+    cart = cart.filter(item => item.name !== name);
+
+    updateCart();
+}
+
+function updateCart(){
+
+    const container = document.getElementById('cartItems');
+
+    let total = 0;
+    let count = 0;
+
+    if(cart.length === 0){
+
+        container.innerHTML =
+        '<p style="color:#aaa">Tu carrito está vacío.</p>';
+
+    }else{
+
+        container.innerHTML = cart.map(item => {
+
+            total += item.price * item.quantity;
+            count += item.quantity;
+
+            return `
+            <div class="cart-item">
+
+                <strong>${item.name}</strong>
+
+                <p>
+                ${item.quantity} x $${formatPrice(item.price)}
+                </p>
+
+                <p style="color:#ffad18">
+                $${formatPrice(item.price * item.quantity)}
+                </p>
+
+                <button
+                    onclick="removeFromCart('${item.name}')"
+                    style="
+                    background:#333;
+                    color:#fff;
+                    border:0;
+                    padding:5px 9px;
+                    border-radius:5px;
+                    cursor:pointer;">
+                    Eliminar
+                </button>
+
+            </div>
+            `;
+
+        }).join('');
+    }
+
+    document.getElementById('cartCount').textContent = count;
+
+    document.getElementById('cartTotal').textContent =
+        formatPrice(total);
+
+    updateWhatsApp();
+}
+
+function openCart(){
+    document.getElementById('cartPanel')
+    .classList.add('open');
+}
+
+function closeCart(){
+    document.getElementById('cartPanel')
+    .classList.remove('open');
+}
+
+function updateWhatsApp(){
+
+    let message =
+    'Hola, quiero hacer un pedido en El Imperio Burger:%0A%0A';
+
+    cart.forEach(item => {
+
+        message +=
+        `• ${item.name} x${item.quantity} - $${formatPrice(item.price * item.quantity)}%0A`;
+
+    });
+
+    let total = cart.reduce(
+        (sum,item) =>
+        sum + item.price * item.quantity,
+        0
+    );
+
+    message +=
+    `%0A*TOTAL: $${formatPrice(total)}*`;
+
+    /*
+      CAMBIA EL NÚMERO POR EL WHATSAPP REAL
+      DE EL IMPERIO BURGER.
+    */
+
+    const phone = '573000000000';
+
+    document.getElementById('whatsappButton').href =
+        `https://wa.me/${phone}?text=${message}`;
+}
+
+/* BUSCADOR */
+
+document.getElementById('search')
+.addEventListener('input',function(){
+
+    const text =
+    this.value.toLowerCase();
+
+    document
+    .querySelectorAll('.card')
+    .forEach(card => {
+
+        const content =
+        card.textContent.toLowerCase();
+
+        card.style.display =
+        content.includes(text)
+        ? ''
+        : 'none';
+
+    });
+
+});
+
+updateCart();
+
+</script>
+
+</body>
+</html>
