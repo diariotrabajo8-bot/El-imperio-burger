@@ -901,201 +901,131 @@ function agregar(nombre,precio){
     alert(nombre+" agregado al carrito");
 }
 
-function actualizarCarrito()
+function actualizarCarrito(){
 
-    const contenedor = document.getElementById("cartItems");
+    let contenedor=document.getElementById("cartItems");
+    let contador=document.getElementById("contador");
+    let total=document.getElementById("total");
 
-    if(!contenedor) return;
+    contenedor.innerHTML="";
 
-    contenedor.innerHTML = "";
+    let cantidadTotal=0;
+    let precioTotal=0;
 
-    let total = 0;
-    let cantidadTotal = 0;
+    if(carrito.length===0){
+        contenedor.innerHTML='<div class="empty">Tu carrito está vacío.</div>';
+    }
 
-    if(carrito.length === 0){
+    carrito.forEach((p,index)=>{
 
-        contenedor.innerHTML = `
-            <p style="text-align:center;padding:20px;">
-                🛒 Tu carrito está vacío
-            </p>
-        `;
+        cantidadTotal+=p.cantidad;
+        precioTotal+=p.precio*p.cantidad;
 
-    }else{
+        contenedor.innerHTML+=`
+        <div class="cart-item">
+            <strong>${p.nombre}</strong>
+            <span>$${formato(p.precio)} c/u</span>
 
-        carrito.forEach((producto,index)=>{
-
-            total += producto.precio * producto.cantidad;
-            cantidadTotal += producto.cantidad;
-
-            const item = document.createElement("div");
-
-            item.className = "cart-item";
-
-            item.innerHTML = `
-                <strong>${producto.nombre}</strong>
-
-                <div class="cart-controls">
-
-                    <button onclick="cambiarCantidad(${index},-1)">
-                        −
-                    </button>
-
-                    <span>
-                        ${producto.cantidad}
-                    </span>
-
-                    <button onclick="cambiarCantidad(${index},1)">
-                        +
-                    </button>
-
-                    <span style="margin-left:auto;">
-                        $${(producto.precio * producto.cantidad).toLocaleString("es-CO")}
-                    </span>
-
-                    <button onclick="eliminarProducto(${index})">
-                        🗑️
-                    </button>
-
-                </div>
-            `;
-
-            contenedor.appendChild(item);
-
-        });
-
-        contenedor.innerHTML += `
-            <div style="
-                margin-top:15px;
-                padding:15px;
-                border-top:2px solid #fda119;
-                font-size:20px;
-                font-weight:bold;
-            ">
-                TOTAL:
-                $${total.toLocaleString("es-CO")}
+            <div class="cart-controls">
+                <button onclick="cambiarCantidad(${index},-1)">−</button>
+                <span>${p.cantidad}</span>
+                <button onclick="cambiarCantidad(${index},1)">+</button>
+                <strong>$${formato(p.precio*p.cantidad)}</strong>
             </div>
-        `;
-    }
+        </div>`;
+    });
 
-    const contador =
-        document.getElementById("cartCount") ||
-        document.getElementById("contador") ||
-        document.querySelector(".cart-count");
-
-    if(contador){
-        contador.textContent = cantidadTotal;
-    }
+    contador.textContent=cantidadTotal;
+    total.textContent=formato(precioTotal);
 }
-
 
 function cambiarCantidad(index,cambio){
 
-    carrito[index].cantidad += cambio;
+    carrito[index].cantidad+=cambio;
 
-    if(carrito[index].cantidad <= 0){
-
+    if(carrito[index].cantidad<=0){
         carrito.splice(index,1);
-
     }
 
     actualizarCarrito();
 }
-
-
-function eliminarProducto(index){
-
-    carrito.splice(index,1);
-
-    actualizarCarrito();
-}
-
 
 function abrirCarrito(){
-
-    const carritoElemento =
-        document.getElementById("carrito") ||
-        document.querySelector(".cart");
-
-    if(carritoElemento){
-
-        carritoElemento.style.display = "block";
-
-    }
+    document.getElementById("cartPanel").style.display="block";
 }
-
 
 function cerrarCarrito(){
-
-    const carritoElemento =
-        document.getElementById("carrito") ||
-        document.querySelector(".cart");
-
-    if(carritoElemento){
-
-        carritoElemento.style.display = "none";
-
-    }
+    document.getElementById("cartPanel").style.display="none";
 }
 
+function formato(numero){
+    return numero.toLocaleString("es-CO");
+}
 
 function enviarPedido(){
 
-    if(carrito.length === 0){
-
-        alert("🛒 Tu carrito está vacío.");
-
+    if(carrito.length===0){
+        alert("Primero agrega productos al carrito.");
         return;
     }
 
-    let total = 0;
+    let nombre=document.getElementById("nombre").value.trim();
+    let telefono=document.getElementById("telefono").value.trim();
+    let direccion=document.getElementById("direccion").value.trim();
+    let observaciones=document.getElementById("observaciones").value.trim();
 
-    let pedido = "🍔 *EL IMPERIO BURGER*%0A";
-    pedido += "====================%0A%0A";
+    if(!nombre || !telefono || !direccion){
+        alert("Por favor completa nombre, teléfono y dirección.");
+        return;
+    }
 
-    carrito.forEach(producto => {
+    let mensaje="🍔 *NUEVO PEDIDO - EL IMPERIO BURGER*%0A%0A";
 
-        const subtotal =
-            producto.precio * producto.cantidad;
+    mensaje+="👤 *Cliente:* "+nombre+"%0A";
+    mensaje+="📞 *Teléfono:* "+telefono+"%0A";
+    mensaje+="📍 *Dirección:* "+direccion+"%0A%0A";
 
-        total += subtotal;
+    mensaje+="🛒 *PEDIDO:*%0A";
 
-        pedido +=
-            "🍔 " +
-            producto.nombre +
-            " x" +
-            producto.cantidad +
-            " - $" +
-            subtotal.toLocaleString("es-CO") +
-            "%0A";
+    let total=0;
 
+    carrito.forEach(p=>{
+        let subtotal=p.precio*p.cantidad;
+        total+=subtotal;
+
+        mensaje+="• "+p.nombre+
+        " x"+p.cantidad+
+        " - $"+formato(subtotal)+
+        "%0A";
     });
 
-    pedido += "%0A";
-    pedido +=
-        "💰 *TOTAL: $" +
-        total.toLocaleString("es-CO") +
-        "*%0A%0A";
+    mensaje+="%0A💰 *TOTAL: $"+formato(total)+"*%0A";
 
-    pedido += "👤 *DATOS DEL CLIENTE*%0A";
-    pedido += "Nombre: __________________%0A";
-    pedido += "Dirección: _______________%0A";
-    pedido += "Teléfono: _________________%0A";
-    pedido += "Observaciones: _____________%0A%0A";
+    if(observaciones){
+        mensaje+="%0A📝 *Observaciones:* "+observaciones;
+    }
 
-    pedido += "✅ Quiero realizar este pedido.";
-
-    const numero = "573208019324";
-
-    const url =
-        "https://wa.me/" +
-        numero +
-        "?text=" +
-        pedido;
+    let url="https://wa.me/573208019324?text="+mensaje;
 
     window.open(url,"_blank");
-
 }
 
+function buscar(){
+
+    let texto=document.getElementById("search").value.toLowerCase();
+
+    document.querySelectorAll(".card").forEach(card=>{
+
+        let contenido=card.innerText.toLowerCase();
+
+        if(contenido.includes(texto)){
+            card.style.display="flex";
+        }else{
+            card.style.display="none";
+        }
+
+    });
+}
 
 actualizarCarrito();
 
@@ -1103,5 +1033,3 @@ actualizarCarrito();
 
 </body>
 </html>
-
-    
