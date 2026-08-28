@@ -7,376 +7,406 @@
 
 <style>
 *{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#090909;
-  color:white;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#0b0b0b;
+    color:white;
 }
 
 header{
-  background:#050505;
-  position:sticky;
-  top:0;
-  z-index:100;
-  border-bottom:2px solid #ff9d00;
-}
-
-.header{
-  text-align:center;
-  padding:18px 10px 10px;
+    background:#050505;
+    text-align:center;
+    padding:22px 15px 15px;
+    border-bottom:2px solid #f5a623;
+    position:sticky;
+    top:0;
+    z-index:1000;
 }
 
 .logo{
-  color:#ffad18;
-  font-size:34px;
-  font-weight:900;
+    font-size:clamp(28px,6vw,52px);
+    font-weight:900;
+    color:#ffad19;
 }
 
 .logo span{
-  margin-right:8px;
+    font-size:1.1em;
 }
 
 .slogan{
-  color:#ddd;
-  margin-top:5px;
+    margin-top:5px;
+    color:#ddd;
+    font-size:16px;
 }
 
 nav{
-  display:flex;
-  gap:8px;
-  overflow-x:auto;
-  padding:14px 10px;
+    margin-top:18px;
+    display:flex;
+    gap:9px;
+    overflow-x:auto;
+    padding:5px;
+    scrollbar-width:none;
 }
 
-nav button{
-  background:#222;
-  color:white;
-  border:1px solid #444;
-  border-radius:20px;
-  padding:9px 15px;
-  white-space:nowrap;
-  cursor:pointer;
+nav::-webkit-scrollbar{
+    display:none;
 }
 
-nav button:hover{
-  background:#ffad18;
-  color:#111;
+nav a{
+    white-space:nowrap;
+    text-decoration:none;
+    color:white;
+    background:#242424;
+    border:1px solid #444;
+    padding:10px 16px;
+    border-radius:25px;
+    font-size:14px;
+    transition:.2s;
+}
+
+nav a:hover{
+    background:#ffad19;
+    color:#111;
 }
 
 .hero{
-  min-height:430px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:30px;
-  background:
-  radial-gradient(circle,#8b3d00 0%,#351506 35%,#160b06 75%);
+    min-height:470px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:40px 20px;
+    background:
+      radial-gradient(circle at center,#6b2b00 0%,#2a1207 38%,#100b08 75%);
 }
 
 .hero h1{
-  font-size:clamp(40px,7vw,70px);
-  margin-bottom:15px;
+    font-size:clamp(38px,8vw,72px);
+    margin-bottom:18px;
 }
 
 .hero p{
-  font-size:22px;
-  color:#ddd;
-  margin-bottom:28px;
+    font-size:clamp(18px,4vw,27px);
+    color:#ddd;
+    margin-bottom:30px;
 }
 
 .btn{
-  display:inline-block;
-  background:#ffad18;
-  color:#111;
-  border:0;
-  border-radius:12px;
-  padding:15px 28px;
-  font-size:18px;
-  font-weight:bold;
-  cursor:pointer;
+    display:inline-block;
+    background:#ffad19;
+    color:#111;
+    font-weight:900;
+    padding:16px 30px;
+    border-radius:12px;
+    text-decoration:none;
+    border:none;
+    cursor:pointer;
+    font-size:17px;
+}
+
+.btn:hover{
+    transform:scale(1.03);
 }
 
 .container{
-  max-width:1200px;
-  margin:auto;
-  padding:40px 18px 100px;
+    width:min(1200px,94%);
+    margin:auto;
 }
 
-.titulo{
-  text-align:center;
-  color:#ffad18;
-  font-size:30px;
-  margin-bottom:10px;
+.section{
+    padding:45px 0;
 }
 
-.subtitulo{
-  text-align:center;
-  color:#bbb;
-  margin-bottom:30px;
+.section-title{
+    text-align:center;
+    color:#ffad19;
+    font-size:32px;
+    margin-bottom:25px;
 }
 
-.buscar{
-  width:100%;
-  max-width:700px;
-  display:block;
-  margin:0 auto 35px;
-  padding:15px;
-  background:#151515;
-  color:white;
-  border:1px solid #444;
-  border-radius:12px;
-  outline:none;
+.search{
+    width:min(600px,100%);
+    display:block;
+    margin:0 auto 30px;
+    padding:15px 18px;
+    border-radius:30px;
+    border:1px solid #555;
+    background:#191919;
+    color:white;
+    font-size:16px;
+    outline:none;
 }
 
-.buscar:focus{
-  border-color:#ffad18;
+.category-title{
+    color:#ffad19;
+    font-size:27px;
+    margin:38px 0 18px;
+    border-left:5px solid #ffad19;
+    padding-left:12px;
 }
 
-.categoria{
-  margin-bottom:45px;
+.products{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:18px;
 }
 
-.categoria h2{
-  color:#ffad18;
-  border-bottom:1px solid #533400;
-  padding-bottom:10px;
-  margin-bottom:18px;
+.card{
+    background:#171717;
+    border:1px solid #333;
+    border-radius:16px;
+    overflow:hidden;
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    transition:.25s;
 }
 
-.productos{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:18px;
+.card:hover{
+    transform:translateY(-4px);
+    border-color:#ffad19;
+    box-shadow:0 8px 30px #000;
 }
 
-.producto{
-  background:#161616;
-  border:1px solid #292929;
-  border-radius:16px;
-  overflow:hidden;
+.card h3{
+    color:#fff;
+    font-size:20px;
+    margin-bottom:8px;
 }
 
-.producto-imagen{
-  height:100px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:55px;
-  background:linear-gradient(135deg,#321b08,#111);
+.description{
+    color:#bbb;
+    line-height:1.45;
+    font-size:14px;
+    min-height:62px;
 }
 
-.producto-info{
-  padding:16px;
+.price{
+    color:#ffad19;
+    font-size:24px;
+    font-weight:900;
+    margin:14px 0;
 }
 
-.producto h3{
-  font-size:20px;
-  margin-bottom:7px;
+.add{
+    width:100%;
+    background:#ffad19;
+    border:none;
+    border-radius:10px;
+    padding:12px;
+    font-weight:900;
+    cursor:pointer;
+    font-size:15px;
 }
 
-.producto p{
-  color:#aaa;
-  font-size:14px;
-  min-height:45px;
-}
-
-.precio{
-  color:#ffad18;
-  font-size:21px;
-  font-weight:bold;
-  margin:14px 0;
-}
-
-.agregar{
-  width:100%;
-  background:#ffad18;
-  color:#111;
-  border:0;
-  padding:12px;
-  border-radius:10px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.agregar:hover{
-  background:#ffc04a;
-}
-
-.carrito-btn{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  z-index:200;
-  background:#ffad18;
-  color:#111;
-  border:0;
-  border-radius:30px;
-  padding:15px 22px;
-  font-weight:bold;
-  font-size:16px;
-  box-shadow:0 5px 25px #000;
-  cursor:pointer;
-}
-
-.carrito-btn span{
-  background:#111;
-  color:#ffad18;
-  padding:3px 8px;
-  border-radius:20px;
-  margin-left:5px;
-}
-
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.8);
-  z-index:300;
-  align-items:flex-end;
-  justify-content:center;
-}
-
-.modal.activo{
-  display:flex;
-}
-
-.carrito{
-  width:min(600px,100%);
-  max-height:85vh;
-  overflow:auto;
-  background:#171717;
-  border-radius:20px 20px 0 0;
-  padding:22px;
-}
-
-.cabecera-carrito{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:15px;
-}
-
-.cerrar{
-  background:#333;
-  color:white;
-  border:0;
-  padding:9px 12px;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-.item-carrito{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:14px 0;
-  border-bottom:1px solid #333;
-}
-
-.controles button{
-  width:30px;
-  height:30px;
-  background:#333;
-  color:white;
-  border:0;
-  border-radius:6px;
-}
-
-.total{
-  display:flex;
-  justify-content:space-between;
-  color:#ffad18;
-  font-size:23px;
-  font-weight:bold;
-  padding:20px 0;
-}
-
-.whatsapp{
-  width:100%;
-  background:#25d366;
-  color:white;
-  border:0;
-  padding:15px;
-  border-radius:10px;
-  font-weight:bold;
-  font-size:17px;
-  cursor:pointer;
-}
-
-.vacio{
-  text-align:center;
-  color:#999;
-  padding:30px;
+.add:hover{
+    background:#ffc14a;
 }
 
 .carta{
-  margin-top:50px;
-  background:#111;
-  padding:20px;
-  border-radius:18px;
+    background:#121212;
 }
 
 .carta img{
-  width:100%;
-  max-width:900px;
-  display:block;
-  margin:15px auto;
-  border-radius:12px;
+    width:100%;
+    max-width:850px;
+    display:block;
+    margin:18px auto;
+    border-radius:15px;
+    border:2px solid #333;
+}
+
+.promo{
+    background:linear-gradient(135deg,#ffad19,#d96b00);
+    color:#111;
+    padding:25px;
+    border-radius:18px;
+    text-align:center;
+    margin:30px auto;
+    max-width:850px;
+}
+
+.promo h2{
+    font-size:28px;
+    margin-bottom:8px;
 }
 
 footer{
-  text-align:center;
-  padding:30px;
-  background:#050505;
-  border-top:1px solid #533400;
-  color:#999;
+    background:#050505;
+    border-top:2px solid #f5a623;
+    text-align:center;
+    padding:35px 15px 100px;
+    color:#aaa;
+}
+
+.whatsapp{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    z-index:2000;
+    background:#25d366;
+    color:white;
+    text-decoration:none;
+    padding:15px 22px;
+    border-radius:50px;
+    font-weight:900;
+    box-shadow:0 5px 25px #000;
+}
+
+.cart{
+    position:fixed;
+    right:20px;
+    bottom:82px;
+    z-index:2000;
+    background:#ffad19;
+    color:#111;
+    border:none;
+    padding:14px 20px;
+    border-radius:50px;
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:0 5px 25px #000;
+}
+
+#cartPanel{
+    display:none;
+    position:fixed;
+    z-index:3000;
+    right:15px;
+    top:15px;
+    width:min(430px,calc(100% - 30px));
+    max-height:90vh;
+    overflow:auto;
+    background:#161616;
+    border:2px solid #ffad19;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 10px 50px #000;
+}
+
+.cart-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.close{
+    background:#333;
+    color:white;
+    border:none;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    cursor:pointer;
+    font-size:20px;
+}
+
+.cart-item{
+    border-bottom:1px solid #333;
+    padding:12px 0;
+}
+
+.cart-item strong{
+    display:block;
+}
+
+.cart-controls{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:8px;
+}
+
+.cart-controls button{
+    background:#333;
+    color:white;
+    border:none;
+    width:30px;
+    height:30px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.total{
+    color:#ffad19;
+    font-size:25px;
+    font-weight:900;
+    margin:20px 0;
+}
+
+.form input,
+.form textarea,
+.form select{
+    width:100%;
+    margin:7px 0;
+    padding:13px;
+    background:#222;
+    color:white;
+    border:1px solid #444;
+    border-radius:9px;
+}
+
+.form textarea{
+    min-height:80px;
+    resize:vertical;
+}
+
+.empty{
+    text-align:center;
+    color:#aaa;
+    padding:20px;
 }
 
 @media(max-width:600px){
-  .logo{
-    font-size:25px;
-  }
+    header{
+        position:relative;
+    }
 
-  .hero{
-    min-height:360px;
-  }
+    .hero{
+        min-height:400px;
+    }
 
-  .hero h1{
-    font-size:42px;
-  }
+    .products{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+    }
 
-  .hero p{
-    font-size:18px;
-  }
+    .card{
+        padding:13px;
+    }
 
-  .productos{
-    grid-template-columns:1fr 1fr;
-  }
+    .card h3{
+        font-size:17px;
+    }
 
-  .producto h3{
-    font-size:17px;
-  }
+    .description{
+        font-size:13px;
+    }
 
-  .producto p{
-    font-size:12px;
-  }
+    .price{
+        font-size:20px;
+    }
 
-  .precio{
-    font-size:18px;
-  }
-}
+    .whatsapp{
+        right:12px;
+        bottom:12px;
+        padding:12px 15px;
+    }
 
-@media(max-width:400px){
-  .productos{
-    grid-template-columns:1fr;
-  }
+    .cart{
+        right:12px;
+        bottom:65px;
+    }
 }
 </style>
 </head>
@@ -384,110 +414,458 @@ footer{
 <body>
 
 <header>
+    <div class="logo">🍔 EL IMPERIO BURGER</div>
+    <div class="slogan">El sabor que manda</div>
 
-<div class="header">
-
-<div class="logo">
-🍔 EL IMPERIO BURGER
-</div>
-
-<div class="slogan">
-El sabor que manda
-</div>
-
-<nav id="nav"></nav>
-
-</div>
-
+    <nav>
+        <a href="#hamburguesas">Hamburguesas</a>
+        <a href="#salchipapas">Salchipapas</a>
+        <a href="#perros">Perros</a>
+        <a href="#burritos">Burritos</a>
+        <a href="#platos">Platos especiales</a>
+        <a href="#crepes">Crepes</a>
+        <a href="#bebidas">Bebidas</a>
+        <a href="#malteadas">Malteadas</a>
+        <a href="#sodas">Sodas italianas</a>
+        <a href="#waffles">Waffles</a>
+        <a href="#sandwich">Sándwich</a>
+        <a href="#combos">Combos</a>
+        <a href="#entradas">Entradas</a>
+    </nav>
 </header>
 
 <section class="hero">
-
-<div>
-
-<h1>Bienvenido al Imperio</h1>
-
-<p>
-Las mejores hamburguesas, directamente a tu puerta.
-</p>
-
-<button class="btn" onclick="document.getElementById('menu').scrollIntoView()">
-VER MENÚ
-</button>
-
-</div>
-
+    <div>
+        <h1>Bienvenido al Imperio</h1>
+        <p>Las mejores hamburguesas, directamente a tu puerta.</p>
+        <a href="#menu" class="btn">VER MENÚ</a>
+    </div>
 </section>
 
-<main class="container" id="menu">
+<section class="section" id="menu">
+<div class="container">
 
-<h2 class="titulo">
-NUESTRO MENÚ
-</h2>
-
-<p class="subtitulo">
-Elige tus favoritos y agrégalos al carrito.
-</p>
+<h2 class="section-title">🍔 NUESTRO MENÚ</h2>
 
 <input
-class="buscar"
-id="buscar"
-placeholder="🔎 Buscar hamburguesa, papas, bebidas..."
+    class="search"
+    id="search"
+    type="search"
+    placeholder="Buscar hamburguesa, papas, bebida..."
+    oninput="buscar()"
 >
 
-<div id="productos"></div>
+<div class="promo">
+    <h2>🎂 PROMOCIÓN PARA CUMPLEAÑEROS</h2>
+    <p>Por compras mayores a <strong>$47.000</strong>, el cumpleañero tiene un combo gratis.</p>
+</div>
 
-<section class="carta">
+<!-- HAMBURGUESAS -->
+<h2 class="category-title" id="hamburguesas">🍔 HAMBURGUESAS</h2>
+<div class="products">
 
-<h2 class="titulo">
-NUESTRA CARTA
-</h2>
+<div class="card">
+<h3>Artesanal</h3>
+<p class="description">Pan artesanal, carne de res, queso, maíz, lechuga y tomate.</p>
+<div class="price">$8.000</div>
+<button class="add" onclick="agregar('Artesanal',8000)">Agregar</button>
+</div>
 
-<p class="subtitulo">
-Consulta nuestra carta completa.
-</p>
+<div class="card">
+<h3>Sencilla</h3>
+<p class="description">Pan artesanal, carne de res, tocineta, queso, maíz y aro de cebolla.</p>
+<div class="price">$10.000</div>
+<button class="add" onclick="agregar('Sencilla',10000)">Agregar</button>
+</div>
 
-<img src="IMG-20260828-WA0008.jpg">
+<div class="card">
+<h3>Imperio</h3>
+<p class="description">Pan artesanal, carne de res, tocineta, queso, maíz, aro de cebolla y papa a la francesa.</p>
+<div class="price">$15.000</div>
+<button class="add" onclick="agregar('Imperio',15000)">Agregar</button>
+</div>
 
-<img src="IMG-20260704-WA0015(1).jpg">
+<div class="card">
+<h3>Criolla</h3>
+<p class="description">Pan artesanal, huevo, pollo desmechado, carne de res, tocineta, queso, maíz, aro de cebolla y carne de hamburguesa.</p>
+<div class="price">$15.000</div>
+<button class="add" onclick="agregar('Criolla',15000)">Agregar</button>
+</div>
 
+<div class="card">
+<h3>Tóxica</h3>
+<p class="description">Pan artesanal, doble carne de res, tocineta, queso, maíz, aro de cebolla, papa a la francesa y bebida.</p>
+<div class="price">$20.000</div>
+<button class="add" onclick="agregar('Tóxica',20000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>La Ardida</h3>
+<p class="description">Pan artesanal, carne de hamburguesa, butifarra, jalapeño, queso, nachos y salsa de la casa.</p>
+<div class="price">$17.000</div>
+<button class="add" onclick="agregar('La Ardida',17000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Deprimida</h3>
+<p class="description">Pan artesanal, doble carne, queso, aro de cebolla, maíz y papa a la francesa.</p>
+<div class="price">$18.000</div>
+<button class="add" onclick="agregar('Deprimida',18000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Salchiburger</h3>
+<p class="description">Papa a la francesa, papa criolla, chorizo, hamburguesa, sencilla, doble queso, maíz y papa ripio.</p>
+<div class="price">$25.000</div>
+<button class="add" onclick="agregar('Salchiburger',25000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- SALCHIPAPAS -->
+<h2 class="category-title" id="salchipapas">🍟 SALCHIPAPAS</h2>
+<div class="products">
+
+<div class="card">
+<h3>Especial</h3>
+<p class="description">Papa a la francesa, papa criolla, chorizo, carne desmechada, pollo desmechado, maduro, picado, doble queso, maíz y papa ripio.</p>
+<div class="price">$25.000</div>
+<button class="add" onclick="agregar('Salchipapa Especial',25000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Mazorcada</h3>
+<p class="description">Pollo, carne, salchicha americana, queso, maíz y tierno.</p>
+<div class="price">$20.000</div>
+<button class="add" onclick="agregar('Mazorcada',20000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>De la Casa</h3>
+<p class="description">Papa a la francesa, papa criolla, chorizo, carne desmechada, pollo desmechado, maduro, picado, doble queso, maíz, costilla y papa ripio.</p>
+<div class="price">$40.000</div>
+<button class="add" onclick="agregar('Salchipapa De la Casa',40000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Monster</h3>
+<p class="description">Papa a la francesa, papa criolla y chorizo.</p>
+<div class="price">$60.000</div>
+<button class="add" onclick="agregar('Monster',60000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- PERROS -->
+<h2 class="category-title" id="perros">🌭 PERROS</h2>
+<div class="products">
+
+<div class="card">
+<h3>Perro</h3>
+<p class="description">Pan, lechuga, tomate, plátano picado, guacamole, salchicha, queso y maíz.</p>
+<div class="price">$10.000</div>
+<button class="add" onclick="agregar('Perro',10000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- BURRITOS -->
+<h2 class="category-title" id="burritos">🌯 BURRITOS</h2>
+<div class="products">
+
+<div class="card">
+<h3>Burrito de pollo</h3>
+<p class="description">Burrito relleno de pollo desmechado.</p>
+<div class="price">$15.000</div>
+<button class="add" onclick="agregar('Burrito de pollo',15000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Burrito de carne</h3>
+<p class="description">Burrito relleno de carne desmechada.</p>
+<div class="price">$15.000</div>
+<button class="add" onclick="agregar('Burrito de carne',15000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- PLATOS -->
+<h2 class="category-title" id="platos">🍽️ PLATOS ESPECIALES</h2>
+<div class="products">
+
+<div class="card">
+<h3>Platos especiales</h3>
+<p class="description">Lomo de cerdo en salsa de vino, churrasco, pechuga gratinada, costillas BBQ, alitas BBQ o camarones al ajillo.</p>
+<div class="price">$30.000</div>
+<button class="add" onclick="agregar('Plato especial',30000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- CREPES -->
+<h2 class="category-title" id="crepes">🥞 CREPES</h2>
+<div class="products">
+
+<div class="card">
+<h3>Dulce con frutas</h3>
+<p class="description">Crepe dulce acompañado de frutas.</p>
+<div class="price">$15.000</div>
+<button class="add" onclick="agregar('Crepe dulce con frutas',15000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Mixto carne y pollo</h3>
+<p class="description">Crepe mixto de carne y pollo.</p>
+<div class="price">$18.000</div>
+<button class="add" onclick="agregar('Crepe mixto carne y pollo',18000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- BEBIDAS -->
+<h2 class="category-title" id="bebidas">🥤 BEBIDAS</h2>
+<div class="products">
+
+<div class="card">
+<h3>Limonadas</h3>
+<p class="description">Coco, hierbabuena, natural, cerveza, piña colada, frutos rojos, mango biche o sandía.</p>
+<div class="price">$10.000</div>
+<button class="add" onclick="agregar('Limonada',10000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Granizado de café</h3>
+<p class="description">Refrescante granizado de café.</p>
+<div class="price">$10.000</div>
+<button class="add" onclick="agregar('Granizado de café',10000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Nevado de café</h3>
+<p class="description">Nevado cremoso de café.</p>
+<div class="price">$10.000</div>
+<button class="add" onclick="agregar('Nevado de café',10000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- MALTEADAS -->
+<h2 class="category-title" id="malteadas">🥤 MALTEADAS</h2>
+<div class="products">
+
+<div class="card">
+<h3>Willy Wonka</h3>
+<p class="description">Malteada especial.</p>
+<div class="price">$14.000</div>
+<button class="add" onclick="agregar('Malteada Willy Wonka',14000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Cookie & Cream</h3>
+<p class="description">Malteada de cookie & cream.</p>
+<div class="price">$14.000</div>
+<button class="add" onclick="agregar('Malteada Cookie & Cream',14000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Brownie</h3>
+<p class="description">Malteada de brownie.</p>
+<div class="price">$14.000</div>
+<button class="add" onclick="agregar('Malteada Brownie',14000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Frutos rojos</h3>
+<p class="description">Malteada de frutos rojos.</p>
+<div class="price">$14.000</div>
+<button class="add" onclick="agregar('Malteada Frutos Rojos',14000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- SODAS -->
+<h2 class="category-title" id="sodas">🍹 SODAS ITALIANAS</h2>
+<div class="products">
+
+<div class="card">
+<h3>Protocolo</h3>
+<div class="price">$12.000</div>
+<button class="add" onclick="agregar('Soda Protocolo',12000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Frutos amarillos</h3>
+<div class="price">$12.000</div>
+<button class="add" onclick="agregar('Soda Frutos Amarillos',12000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Frutos verdes</h3>
+<div class="price">$12.000</div>
+<button class="add" onclick="agregar('Soda Frutos Verdes',12000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Frutos rojos</h3>
+<div class="price">$12.000</div>
+<button class="add" onclick="agregar('Soda Frutos Rojos',12000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- WAFFLES -->
+<h2 class="category-title" id="waffles">🧇 WAFFLES</h2>
+<div class="products">
+
+<div class="card">
+<h3>Sencillo</h3>
+<div class="price">$14.000</div>
+<button class="add" onclick="agregar('Waffle Sencillo',14000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Burbuja</h3>
+<div class="price">$16.000</div>
+<button class="add" onclick="agregar('Waffle Burbuja',16000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- SANDWICH -->
+<h2 class="category-title" id="sandwich">🥪 SÁNDWICH</h2>
+<div class="products">
+
+<div class="card">
+<h3>Carne o pollo</h3>
+<p class="description">Sándwich de carne o pollo.</p>
+<div class="price">$8.000</div>
+<button class="add" onclick="agregar('Sándwich Carne o Pollo',8000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Mixto carne y pollo</h3>
+<p class="description">Sándwich mixto de carne y pollo.</p>
+<div class="price">$10.000</div>
+<button class="add" onclick="agregar('Sándwich Mixto',10000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- COMBOS -->
+<h2 class="category-title" id="combos">🍔 COMBOS</h2>
+<div class="products">
+
+<div class="card">
+<h3>Combo Malteada + Hamburguesa</h3>
+<p class="description">Malteada acompañada de hamburguesa sencilla.</p>
+<div class="price">$20.000</div>
+<button class="add" onclick="agregar('Combo Malteada + Hamburguesa',20000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Combo Malteada + Sándwich</h3>
+<p class="description">Malteada acompañada de sándwich.</p>
+<div class="price">$20.000</div>
+<button class="add" onclick="agregar('Combo Malteada + Sándwich',20000)">Agregar</button>
+</div>
+
+</div>
+
+<!-- ENTRADAS -->
+<h2 class="category-title" id="entradas">🍟 ENTRADAS</h2>
+<div class="products">
+
+<div class="card">
+<h3>Nachos</h3>
+<div class="price">$15.000</div>
+<button class="add" onclick="agregar('Nachos',15000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Mini tacos</h3>
+<div class="price">$8.000</div>
+<button class="add" onclick="agregar('Mini tacos',8000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Mini empanadas</h3>
+<div class="price">$7.000</div>
+<button class="add" onclick="agregar('Mini empanadas',7000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Nuggets de pollo</h3>
+<div class="price">$7.000</div>
+<button class="add" onclick="agregar('Nuggets de pollo',7000)">Agregar</button>
+</div>
+
+<div class="card">
+<h3>Aros apanados</h3>
+<div class="price">$6.000</div>
+<button class="add" onclick="agregar('Aros apanados',6000)">Agregar</button>
+</div>
+
+</div>
+
+</div>
 </section>
 
-</main>
+<!-- CARTA ORIGINAL -->
+<section class="section carta">
+<div class="container">
 
-<button class="carrito-btn" onclick="abrirCarrito()">
-🛒 Carrito
-<span id="contador">0</span>
-</button>
+<h2 class="section-title">📋 NUESTRA CARTA</h2>
 
-<div class="modal" id="modal">
+<p style="text-align:center;color:#aaa;">
+Conoce todos nuestros productos y especialidades.
+</p>
 
-<div class="carrito">
+<img src="IMG-20260828-WA0008.jpg" alt="Carta El Imperio Burger">
 
-<div class="cabecera-carrito">
-
-<h2>🛒 Tu pedido</h2>
-
-<button class="cerrar" onclick="cerrarCarrito()">
-✕
-</button>
+<img src="IMG-20260704-WA0015(1).jpg" alt="Carta El Imperio Burger segunda página">
 
 </div>
+</section>
 
-<div id="itemsCarrito"></div>
+<!-- CARRITO -->
+<button class="cart" onclick="abrirCarrito()">
+🛒 Carrito <span id="contador">0</span>
+</button>
+
+<a
+class="whatsapp"
+href="https://wa.me/573208019324"
+target="_blank">
+💬 WhatsApp
+</a>
+
+<div id="cartPanel">
+
+<div class="cart-header">
+<h2>🛒 Tu pedido</h2>
+<button class="close" onclick="cerrarCarrito()">×</button>
+</div>
+
+<div id="cartItems"></div>
 
 <div class="total">
-
-<span>TOTAL</span>
-
-<span id="total">$0</span>
-
+Total: $<span id="total">0</span>
 </div>
 
-<button class="whatsapp" onclick="enviarWhatsApp()">
+<div class="form">
 
+<h3 style="margin-bottom:10px;">Datos del cliente</h3>
+
+<input id="nombre" type="text" placeholder="Nombre completo">
+
+<input id="telefono" type="tel" placeholder="Teléfono">
+
+<input id="direccion" type="text" placeholder="Dirección de entrega">
+
+<textarea id="observaciones" placeholder="Observaciones del pedido"></textarea>
+
+<button class="btn" style="width:100%;margin-top:10px;" onclick="enviarPedido()">
 📲 ENVIAR PEDIDO POR WHATSAPP
-
 </button>
 
 </div>
@@ -495,551 +873,35 @@ Consulta nuestra carta completa.
 </div>
 
 <footer>
-
-<strong>EL IMPERIO BURGER</strong>
-
-<br>
-
-El sabor que manda 🍔
-
+<h2 style="color:#ffad19;">🍔 EL IMPERIO BURGER</h2>
+<p style="margin-top:10px;">El sabor que manda</p>
+<p style="margin-top:15px;">Pedidos por WhatsApp: 320 801 9324</p>
 </footer>
 
 <script>
 
-const menu = [
-
-{
-categoria:"🍔 Hamburguesas",
-productos:[
-
-["Artesanal",8000,"Pan artesanal, carne de res, queso, maíz, lechuga y tomate."],
-
-["Sencilla",10000,"Pan artesanal, carne de res, tocineta, queso, maíz y aro de cebolla."],
-
-["Imperio",15000,"Carne de res, tocineta, queso, maíz, aro de cebolla y papa a la francesa."],
-
-["Criolla",15000,"Huevo, pollo desmechado, carne de res, tocineta, queso, maíz y lechuga."],
-
-["Tóxica",20000,"Doble carne de res, tocineta, queso, maíz, aro de cebolla y papa francesa."],
-
-["La Ardida",17000,"Carne de hamburguesa, butifarra, jalapeño, queso y nachos."],
-
-["Deprimida",18000,"Doble carne, queso, aro de cebolla, maíz y papa a la francesa."],
-
-["Salchiburger",25000,"Papa francesa, papa criolla, chorizo, hamburguesa, tocineta y queso."]
-
-]
-},
-
-{
-categoria:"🍟 Salchipapas",
-productos:[
-
-["Especial",25000,"Papa francesa, papa criolla, chorizo, carne y pollo desmechado."],
-
-["Mazorcada",20000,"Pollo, carne, salchicha americana, queso y maíz."],
-
-["De la Casa",40000,"Papa francesa, papa criolla, chorizo, carne, pollo, maduro y queso."],
-
-["Monster",60000,"Papa a la francesa, pollo y chorizo."]
-
-]
-},
-
-{
-categoria:"🌭 Perros",
-productos:[
-
-["Perro",10000,"Pan, lechuga, tomate, plátano, guacamole, salchicha, queso y maíz."]
-
-]
-},
-
-{
-categoria:"🌯 Burritos",
-productos:[
-
-["Burrito de pollo",15000,"Pollo desmechado."],
-
-["Burrito de carne",15000,"Carne desmechada."]
-
-]
-},
-
-{
-categoria:"🍽️ Platos especiales",
-productos:[
-
-["Lomo de cerdo en salsa vino",30000,"Plato especial."],
-
-["Churrasco",30000,"Plato especial."],
-
-["Pechuga gratinada",30000,"Plato especial."],
-
-["Costillas BBQ",30000,"Plato especial."],
-
-["Alitas BBQ",30000,"Plato especial."],
-
-["Camarones al ajillo",30000,"Plato especial."]
-
-]
-},
-
-{
-categoria:"🥞 Crepes",
-productos:[
-
-["Crepe dulce con frutas",15000,"Dulce con frutas."],
-
-["Crepe mixto de carne y pollo",18000,"Mixto de carne y pollo."]
-
-]
-},
-
-{
-categoria:"🥤 Bebidas",
-productos:[
-
-["Limonada coco",10000,"Limonada especial."],
-
-["Limonada hierbabuena",10000,"Limonada especial."],
-
-["Limonada natural",10000,"Limonada natural."],
-
-["Limonada cerveza",10000,"Limonada especial."],
-
-["Limonada piña colada",10000,"Limonada especial."],
-
-["Limonada frutos rojos",10000,"Limonada especial."],
-
-["Limonada mango biche",10000,"Limonada especial."],
-
-["Limonada de sandía",10000,"Limonada especial."],
-
-["Granizado de café",10000,"Bebida fría."],
-
-["Nevado de café",10000,"Bebida fría."]
-
-]
-},
-
-{
-categoria:"🥛 Malteadas",
-productos:[
-
-["Willy Wonka",14000,"Malteada."],
-
-["Cookie & Cream",14000,"Malteada."],
-
-["Brownie",14000,"Malteada."],
-
-["Frutos rojos",14000,"Malteada."]
-
-]
-},
-
-{
-categoria:"🧋 Sodas italianas",
-productos:[
-
-["Protocolo",12000,"Soda italiana."],
-
-["Frutos amarillo",12000,"Soda italiana."],
-
-["Frutos verdes",12000,"Soda italiana."],
-
-["Frutos rojos",12000,"Soda italiana."]
-
-]
-},
-
-{
-categoria:"🧇 Waffles",
-productos:[
-
-["Waffle sencillo",14000,"Waffle sencillo."],
-
-["Waffle burbuja",16000,"Waffle burbuja."]
-
-]
-},
-
-{
-categoria:"🥪 Sándwich",
-productos:[
-
-["Carne o pollo",8000,"Sándwich de carne o pollo."],
-
-["Mixto carne y pollo",10000,"Sándwich mixto."]
-
-]
-},
-
-{
-categoria:"🍱 Combos",
-productos:[
-
-["Malteada + hamburguesa sencilla",20000,"Combo especial."],
-
-["Malteada + sándwich",20000,"Combo especial."]
-
-]
-},
-
-{
-categoria:"🥑 Entradas",
-productos:[
-
-["Nachos",15000,"Entrada."],
-
-["Mini tacos",8000,"Entrada."],
-
-["Mini empanadas",7000,"Entrada."],
-
-["Nuggets de pollo",7000,"Entrada."],
-
-["Aros apanados",6000,"Entrada."]
-
-]
-},
-
-{
-categoria:"🍹 Micheladas",
-productos:[
-
-["Cerveza",9500,"Michelada."],
-
-["Soda",7500,"Michelada."],
-
-["Ginger",8000,"Michelada."]
-
-]
-},
-
-{
-categoria:"🍓 Heladería",
-productos:[
-
-["Fresas con crema",10000,"Postre."]
-
-]
-},
-
-{
-categoria:"🍸 Cócteles",
-productos:[
-
-["Mojito",14000,"Cóctel."],
-
-["Margarita",14000,"Cóctel."],
-
-["Daiquiri",14000,"Cóctel."],
-
-["Tres Cordilleras",13000,"Cóctel."]
-
-]
-}
-
-];
-
 let carrito=[];
-
-function dinero(valor){
-
-return "$"+valor.toLocaleString("es-CO");
-
-}
-
-function mostrarMenu(filtro=""){
-
-let contenedor=document.getElementById("productos");
-
-let html="";
-
-menu.forEach((categoria,index)=>{
-
-let productos=categoria.productos.filter(p=>
-
-(categoria.categoria+" "+p[0]+" "+p[2])
-
-.toLowerCase()
-
-.includes(filtro.toLowerCase())
-
-);
-
-if(productos.length===0)return;
-
-html+=`
-
-<section class="categoria">
-
-<h2>${categoria.categoria}</h2>
-
-<div class="productos">
-
-`;
-
-productos.forEach(p=>{
-
-html+=`
-
-<article class="producto">
-
-<div class="producto-imagen">
-${categoria.categoria.substring(0,2)}
-</div>
-
-<div class="producto-info">
-
-<h3>${p[0]}</h3>
-
-<p>${p[2]}</p>
-
-<div class="precio">
-${dinero(p[1])}
-</div>
-
-<button class="agregar"
-onclick="agregar('${p[0].replace(/'/g,"\\'")}',${p[1]})">
-
-➕ Agregar al carrito
-
-</button>
-
-</div>
-
-</article>
-
-`;
-
-});
-
-html+=`
-
-</div>
-
-</section>
-
-`;
-
-});
-
-contenedor.innerHTML=html;
-
-}
-
-function mostrarCategorias(){
-
-let nav=document.getElementById("nav");
-
-nav.innerHTML="";
-
-menu.forEach(c=>{
-
-let boton=document.createElement("button");
-
-boton.textContent=c.categoria;
-
-boton.onclick=()=>{
-
-document.getElementById("menu").scrollIntoView();
-
-};
-
-nav.appendChild(boton);
-
-});
-
-}
 
 function agregar(nombre,precio){
 
-let producto=carrito.find(p=>p.nombre===nombre);
+    let producto=carrito.find(p=>p.nombre===nombre);
 
-if(producto){
+    if(producto){
+        producto.cantidad++;
+    }else{
+        carrito.push({
+            nombre:nombre,
+            precio:precio,
+            cantidad:1
+        });
+    }
 
-producto.cantidad++;
+    actualizarCarrito();
 
-}else{
-
-carrito.push({
-
-nombre:nombre,
-
-precio:precio,
-
-cantidad:1
-
-});
-
-}
-
-actualizarCarrito();
-
+    alert(nombre+" agregado al carrito");
 }
 
 function actualizarCarrito(){
 
-let contenedor=document.getElementById("itemsCarrito");
-
-let contador=document.getElementById("contador");
-
-let total=document.getElementById("total");
-
-let cantidad=0;
-
-let suma=0;
-
-if(carrito.length===0){
-
-contenedor.innerHTML=
-
-`<div class="vacio">Tu carrito está vacío 🍔</div>`;
-
-}else{
-
-contenedor.innerHTML="";
-
-carrito.forEach((p,index)=>{
-
-cantidad+=p.cantidad;
-
-suma+=p.precio*p.cantidad;
-
-let item=document.createElement("div");
-
-item.className="item-carrito";
-
-item.innerHTML=`
-
-<div>
-
-<strong>${p.nombre}</strong>
-
-<br>
-
-${dinero(p.precio)}
-
-</div>
-
-<div class="controles">
-
-<button onclick="cambiarCantidad(${index},-1)">−</button>
-
-<strong> ${p.cantidad} </strong>
-
-<button onclick="cambiarCantidad(${index},1)">+</button>
-
-</div>
-
-`;
-
-contenedor.appendChild(item);
-
-});
-
-}
-
-contador.textContent=cantidad;
-
-total.textContent=dinero(suma);
-
-}
-
-function cambiarCantidad(index,cambio){
-
-carrito[index].cantidad+=cambio;
-
-if(carrito[index].cantidad<=0){
-
-carrito.splice(index,1);
-
-}
-
-actualizarCarrito();
-
-}
-
-function abrirCarrito(){
-
-document.getElementById("modal").classList.add("activo");
-
-actualizarCarrito();
-
-}
-
-function cerrarCarrito(){
-
-document.getElementById("modal").classList.remove("activo");
-
-}
-
-function enviarWhatsApp(){
-
-if(carrito.length===0){
-
-alert("Agrega productos al carrito primero.");
-
-return;
-
-}
-
-let mensaje="🍔 *PEDIDO EL IMPERIO BURGER*%0A%0A";
-
-let total=0;
-
-carrito.forEach(p=>{
-
-let subtotal=p.precio*p.cantidad;
-
-total+=subtotal;
-
-mensaje+=
-
-"• "+p.cantidad+" x "+p.nombre+
-
-" - "+dinero(subtotal)+"%0A";
-
-});
-
-mensaje+=
-
-"%0A💰 *TOTAL: "+dinero(total)+"*"+
-
-"%0A%0AHola, quiero realizar este pedido.";
-
-let numero="573208019324";
-
-let url=
-
-"https://wa.me/"+numero+
-
-"?text="+mensaje;
-
-window.open(url,"_blank");
-
-}
-
-document.getElementById("buscar").addEventListener(
-
-"input",
-
-function(){
-
-mostrarMenu(this.value);
-
-}
-
-);
-
-mostrarCategorias();
-
-mostrarMenu();
-
-actualizarCarrito();
-
-</script>
-
-</body>
-    </html>
+    let contenedor=document.getElementById("cartItems");
+    let contador=document.ge
