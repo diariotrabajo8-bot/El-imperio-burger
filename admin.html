@@ -6,6 +6,9 @@
 
 <title>Administrador - El Imperio Burger</title>
 
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{
   box-sizing:border-box;
@@ -43,10 +46,10 @@ header p{
 }
 
 .login{
-  max-width:400px;
+  max-width:560px;
   margin:60px auto;
   background:#171717;
-  padding:30px;
+  padding:35px;
   border-radius:18px;
   border:1px solid #333;
   text-align:center;
@@ -54,7 +57,8 @@ header p{
 
 .login h2{
   color:#ffae19;
-  margin-bottom:20px;
+  margin-bottom:25px;
+  font-size:30px;
 }
 
 input{
@@ -66,6 +70,11 @@ input{
   background:#222;
   color:white;
   font-size:16px;
+}
+
+input:focus{
+  outline:none;
+  border-color:#ffae19;
 }
 
 button{
@@ -81,6 +90,12 @@ button{
   margin-top:10px;
   background:#ffae19;
   color:#111;
+  font-size:16px;
+}
+
+.btn-login:disabled{
+  opacity:.6;
+  cursor:not-allowed;
 }
 
 .dashboard{
@@ -165,6 +180,23 @@ button{
   margin-top:20px;
 }
 
+#error{
+  color:#ff5555;
+  margin-top:15px;
+}
+
+#loading{
+  color:#ffae19;
+  margin-top:12px;
+  display:none;
+}
+
+.admin-email{
+  color:#aaa;
+  margin-top:8px;
+  font-size:14px;
+}
+
 @media(max-width:600px){
   header h1{
     font-size:22px;
@@ -172,6 +204,11 @@ button{
 
   .container{
     padding:12px;
+  }
+
+  .login{
+    margin:35px auto;
+    padding:25px;
   }
 }
 </style>
@@ -188,27 +225,35 @@ button{
 
 <!-- LOGIN -->
 <div class="login" id="login">
+
   <h2>🔐 Administrador</h2>
 
   <input
-    type="text"
+    type="email"
     id="usuario"
-    placeholder="Usuario"
+    placeholder="Correo electrónico"
+    autocomplete="email"
   >
 
   <input
     type="password"
     id="clave"
     placeholder="Contraseña"
+    autocomplete="current-password"
   >
 
-  <button class="btn-login" onclick="entrar()">
+  <button
+    class="btn-login"
+    id="btnLogin"
+    onclick="entrar()"
+  >
     INGRESAR
   </button>
 
-  <p id="error"
-     style="color:#ff5555;margin-top:12px;">
-  </p>
+  <p id="loading">Verificando acceso...</p>
+
+  <p id="error"></p>
+
 </div>
 
 
@@ -249,6 +294,8 @@ button{
 
     <h2>📊 Resumen</h2>
 
+    <p class="admin-email" id="adminEmail"></p>
+
     <div class="cards">
 
       <div class="card">
@@ -258,17 +305,17 @@ button{
 
       <div class="card">
         <h3>Ventas</h3>
-        <strong>$0</strong>
+        <strong id="totalVentas">$0</strong>
       </div>
 
       <div class="card">
         <h3>Clientes</h3>
-        <strong>0</strong>
+        <strong id="totalClientes">0</strong>
       </div>
 
       <div class="card">
         <h3>En camino</h3>
-        <strong>0</strong>
+        <strong id="totalCamino">0</strong>
       </div>
 
     </div>
@@ -303,6 +350,7 @@ button{
 
     <div class="order">
       <strong>Gestión de productos</strong>
+
       <p style="margin-top:8px">
         Aquí podremos agregar, modificar,
         eliminar y activar productos.
@@ -343,10 +391,16 @@ button{
     <h2>💰 Ventas</h2>
 
     <div class="order">
+
       <strong>Ventas del día</strong>
-      <p style="font-size:25px;color:#ffae19;margin-top:10px">
+
+      <p
+        id="ventasDia"
+        style="font-size:25px;color:#ffae19;margin-top:10px"
+      >
         $0
       </p>
+
     </div>
 
   </div>
@@ -363,63 +417,302 @@ button{
 
 <script>
 
-function entrar(){
+/* =====================================================
+   CONFIGURACIÓN SUPABASE
+   ===================================================== */
 
-  let usuario =
-    document.getElementById("usuario").value.trim();
+const SUPABASE_URL = "PON_AQUI_TU_SUPABASE_URL";
 
-  let clave =
-    document.getElementById("clave").value.trim();
+const SUPABASE_ANON_KEY = "PON_AQUI_TU_SUPABASE_ANON_KEY";
 
-  /*
-    ACCESO TEMPORAL
-    Después lo conectaremos con Supabase
-    para tener un administrador seguro.
-  */
 
-  if(usuario === "admin" && clave === "1234"){
+const { createClient } =
+  supabase;
 
-    document.getElementById("login").style.display="none";
+const db = createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
 
-    document.getElementById("dashboard").style.display="block";
 
-  }else{
+/* =====================================================
+   ADMINISTRADOR AUTORIZADO
+   ===================================================== */
 
-    document.getElementById("error").innerText =
-      "Usuario o contraseña incorrectos.";
+const ADMIN_EMAIL =
+  "diariotrabajo8@gmail.com";
+
+
+/* =====================================================
+   INICIAR SESIÓN
+   ===================================================== */
+
+async function entrar(){
+
+  const usuario =
+    document
+      .getElementById("usuario")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const clave =
+    document
+      .getElementById("clave")
+      .value
+      .trim();
+
+  const error =
+    document.getElementById("error");
+
+  const loading =
+    document.getElementById("loading");
+
+  const boton =
+    document.getElementById("btnLogin");
+
+
+  error.innerText = "";
+
+
+  if(!usuario || !clave){
+
+    error.innerText =
+      "Ingrese el correo y la contraseña.";
+
+    return;
+  }
+
+
+  boton.disabled = true;
+
+  loading.style.display = "block";
+
+
+  try{
+
+    /*
+      Primero verificamos que sea
+      el correo autorizado.
+    */
+
+    if(usuario !== ADMIN_EMAIL){
+
+      throw new Error(
+        "Este correo no tiene permisos de administrador."
+      );
+
+    }
+
+
+    /*
+      Iniciamos sesión mediante
+      Supabase Authentication.
+    */
+
+    const { data, error: loginError } =
+      await db.auth.signInWithPassword({
+
+        email: usuario,
+
+        password: clave
+
+      });
+
+
+    if(loginError){
+
+      throw loginError;
+
+    }
+
+
+    if(!data.user){
+
+      throw new Error(
+        "No se pudo iniciar la sesión."
+      );
+
+    }
+
+
+    /*
+      Confirmamos nuevamente
+      el correo autorizado.
+    */
+
+    if(
+      data.user.email.toLowerCase()
+      !== ADMIN_EMAIL
+    ){
+
+      await db.auth.signOut();
+
+      throw new Error(
+        "Este usuario no tiene permisos de administrador."
+      );
+
+    }
+
+
+    /*
+      Mostrar panel.
+    */
+
+    document
+      .getElementById("login")
+      .style.display = "none";
+
+
+    document
+      .getElementById("dashboard")
+      .style.display = "block";
+
+
+    document
+      .getElementById("adminEmail")
+      .innerText =
+        "Administrador: " +
+        data.user.email;
+
+
+  }catch(error){
+
+    console.error(error);
+
+    error =
+      error.message ||
+      "No se pudo iniciar sesión.";
+
+    document
+      .getElementById("error")
+      .innerText =
+        error;
+
+  }finally{
+
+    boton.disabled = false;
+
+    loading.style.display = "none";
 
   }
 
 }
 
 
+/* =====================================================
+   CAMBIAR SECCIÓN
+   ===================================================== */
+
 function mostrar(id){
 
-  let secciones =
+  const secciones =
     document.querySelectorAll(".section");
+
 
   secciones.forEach(function(seccion){
 
-    seccion.style.display="none";
+    seccion.style.display = "none";
 
   });
 
-  document.getElementById(id).style.display="block";
+
+  const seleccion =
+    document.getElementById(id);
+
+
+  if(seleccion){
+
+    seleccion.style.display = "block";
+
+  }
 
 }
 
-  
-function salir(){
 
-  document.getElementById("dashboard").style.display="none";
+/* =====================================================
+   CERRAR SESIÓN
+   ===================================================== */
 
-  document.getElementById("login").style.display="block";
+async function salir(){
 
-  document.getElementById("usuario").value="";
+  await db.auth.signOut();
 
-  document.getElementById("clave").value="";
+
+  document
+    .getElementById("dashboard")
+    .style.display = "none";
+
+
+  document
+    .getElementById("login")
+    .style.display = "block";
+
+
+  document
+    .getElementById("usuario")
+    .value = "";
+
+
+  document
+    .getElementById("clave")
+    .value = "";
+
+
+  document
+    .getElementById("error")
+    .innerText = "";
 
 }
+
+
+/* =====================================================
+   COMPROBAR SESIÓN AL ABRIR LA PÁGINA
+   ===================================================== */
+
+async function comprobarSesion(){
+
+  const {
+    data
+  } = await db.auth.getSession();
+
+
+  const session =
+    data.session;
+
+
+  if(
+    session &&
+    session.user &&
+    session.user.email &&
+    session.user.email.toLowerCase()
+      === ADMIN_EMAIL
+  ){
+
+    document
+      .getElementById("login")
+      .style.display = "none";
+
+
+    document
+      .getElementById("dashboard")
+      .style.display = "block";
+
+
+    document
+      .getElementById("adminEmail")
+      .innerText =
+        "Administrador: " +
+        session.user.email;
+
+  }
+
+}
+
+
+/* Ejecutar al cargar */
+
+comprobarSesion();
 
 </script>
 
