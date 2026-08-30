@@ -23,8 +23,91 @@ const db = supabase.createClient(
 const ADMIN_EMAIL =
 "diariotrabajo8@gmail.com";
 
-
 let canalPedidos = null;
+
+
+/* =====================================================
+   SEGURIDAD HTML
+===================================================== */
+
+function escapeHTML(valor){
+
+    if(valor === null || valor === undefined){
+        return "";
+    }
+
+    return String(valor)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* =====================================================
+   FORMATEAR DINERO
+===================================================== */
+
+function dinero(valor){
+
+    return Number(valor || 0)
+        .toLocaleString("es-CO");
+}
+
+
+/* =====================================================
+   NORMALIZAR ESTADO
+===================================================== */
+
+function normalizarEstado(estado){
+
+    if(!estado){
+        return "Pendiente";
+    }
+
+    const estados = {
+
+        "Pendiente":
+        "Pendiente",
+
+        "pendiente":
+        "Pendiente",
+
+        "Preparando":
+        "En preparación",
+
+        "preparando":
+        "En preparación",
+
+        "En preparación":
+        "En preparación",
+
+        "en preparación":
+        "En preparación",
+
+        "En camino":
+        "En camino",
+
+        "en camino":
+        "En camino",
+
+        "Entregado":
+        "Entregado",
+
+        "entregado":
+        "Entregado",
+
+        "Cancelado":
+        "Cancelado",
+
+        "cancelado":
+        "Cancelado"
+
+    };
+
+    return estados[estado] || estado;
+}
 
 
 /* =====================================================
@@ -34,23 +117,28 @@ let canalPedidos = null;
 async function entrar(){
 
     const usuario =
-        document.getElementById("usuario")
+        document
+        .getElementById("usuario")
         .value
         .trim()
         .toLowerCase();
 
     const clave =
-        document.getElementById("clave")
+        document
+        .getElementById("clave")
         .value;
 
     const error =
-        document.getElementById("error");
+        document
+        .getElementById("error");
 
     const loading =
-        document.getElementById("loading");
+        document
+        .getElementById("loading");
 
     const boton =
-        document.getElementById("btnLogin");
+        document
+        .getElementById("btnLogin");
 
 
     error.innerText = "";
@@ -75,19 +163,23 @@ async function entrar(){
 
 
     boton.disabled = true;
+
     loading.style.display = "block";
 
 
     try{
 
-        const { data, error: loginError } =
-            await db.auth.signInWithPassword({
+        const {
+            data,
+            error:loginError
+        } =
+        await db.auth.signInWithPassword({
 
-                email: usuario,
+            email:usuario,
 
-                password: clave
+            password:clave
 
-            });
+        });
 
 
         if(loginError){
@@ -155,15 +247,18 @@ async function entrar(){
 
 function mostrarDashboard(email){
 
-    document.getElementById("login")
+    document
+        .getElementById("login")
         .style.display = "none";
 
 
-    document.getElementById("dashboard")
+    document
+        .getElementById("dashboard")
         .style.display = "block";
 
 
-    document.getElementById("adminEmail")
+    document
+        .getElementById("adminEmail")
         .innerText =
         "Administrador: " + email;
 
@@ -187,7 +282,8 @@ function mostrar(id){
 
     secciones.forEach(function(seccion){
 
-        seccion.style.display = "none";
+        seccion.style.display =
+            "none";
 
     });
 
@@ -198,43 +294,34 @@ function mostrar(id){
 
     if(seleccion){
 
-        seleccion.style.display = "block";
+        seleccion.style.display =
+            "block";
 
     }
 
 
     if(id === "pedidos"){
-
         cargarPedidos();
-
     }
 
 
     if(id === "productos"){
-
         cargarProductos();
-
     }
 
 
     if(id === "clientes"){
-
         cargarClientes();
-
     }
 
 
     if(id === "domicilios"){
-
         cargarDomicilios();
-
     }
 
 
     if(id === "ventas"){
-
         cargarVentas();
-
     }
 
 }
@@ -280,16 +367,19 @@ async function cargarPedidos(){
         "⏳ Cargando pedidos...";
 
 
-    const { data, error } =
-        await db
-        .from("pedidos")
-        .select("*")
-        .order(
-            "id",
-            {
-                ascending:false
-            }
-        );
+    const {
+        data,
+        error
+    } =
+    await db
+    .from("pedidos")
+    .select("*")
+    .order(
+        "id",
+        {
+            ascending:false
+        }
+    );
 
 
     if(error){
@@ -317,7 +407,7 @@ async function cargarPedidos(){
             </div>
         `;
 
-        actualizarResumen();
+        await actualizarResumen();
 
         return;
 
@@ -325,18 +415,24 @@ async function cargarPedidos(){
 
 
     lista.innerHTML =
-        data.map(pedido =>
-            crearTarjetaPedido(pedido)
-        ).join("");
+        data
+        .map(function(pedido){
+
+            return crearTarjetaPedido(
+                pedido
+            );
+
+        })
+        .join("");
 
 
-    actualizarResumen();
+    await actualizarResumen();
 
 }
 
 
 /* =====================================================
-   TARJETA DE PEDIDO
+   TARJETA PEDIDO
 ===================================================== */
 
 function crearTarjetaPedido(pedido){
@@ -363,14 +459,15 @@ function crearTarjetaPedido(pedido){
 
 
     const total =
-        Number(
-            pedido.total || 0
-        ).toLocaleString("es-CO");
+        dinero(
+            pedido.total
+        );
 
 
     const estado =
-        pedido.estado ||
-        "Pendiente";
+        normalizarEstado(
+            pedido.estado
+        );
 
 
     const fecha =
@@ -388,7 +485,7 @@ function crearTarjetaPedido(pedido){
     <div class="order">
 
         <h3>
-            🛒 Pedido #${pedido.id}
+            🛒 Pedido #${escapeHTML(pedido.id)}
         </h3>
 
         <p>
@@ -418,6 +515,7 @@ function crearTarjetaPedido(pedido){
             ${escapeHTML(estado)}
         </span>
 
+
         <div
             style="
                 display:flex;
@@ -429,7 +527,7 @@ function crearTarjetaPedido(pedido){
 
             <button
                 onclick="cambiarEstadoPedido(
-                    ${pedido.id},
+                    ${Number(pedido.id)},
                     'Pendiente'
                 )"
                 style="
@@ -443,21 +541,21 @@ function crearTarjetaPedido(pedido){
 
             <button
                 onclick="cambiarEstadoPedido(
-                    ${pedido.id},
-                    'Preparando'
+                    ${Number(pedido.id)},
+                    'En preparación'
                 )"
                 style="
                     background:#f5a900;
                     color:#111;
                 "
             >
-                🍔 PREPARANDO
+                🍔 EN PREPARACIÓN
             </button>
 
 
             <button
                 onclick="cambiarEstadoPedido(
-                    ${pedido.id},
+                    ${Number(pedido.id)},
                     'En camino'
                 )"
                 style="
@@ -471,7 +569,7 @@ function crearTarjetaPedido(pedido){
 
             <button
                 onclick="cambiarEstadoPedido(
-                    ${pedido.id},
+                    ${Number(pedido.id)},
                     'Entregado'
                 )"
                 style="
@@ -485,7 +583,7 @@ function crearTarjetaPedido(pedido){
 
             <button
                 onclick="cambiarEstadoPedido(
-                    ${pedido.id},
+                    ${Number(pedido.id)},
                     'Cancelado'
                 )"
                 style="
@@ -506,13 +604,19 @@ function crearTarjetaPedido(pedido){
 
 
 /* =====================================================
-   CAMBIAR ESTADO PEDIDO
+   CAMBIAR ESTADO
 ===================================================== */
 
 async function cambiarEstadoPedido(
     id,
     nuevoEstado
 ){
+
+    nuevoEstado =
+        normalizarEstado(
+            nuevoEstado
+        );
+
 
     const confirmar =
         confirm(
@@ -524,24 +628,30 @@ async function cambiarEstadoPedido(
         );
 
 
-    if(!confirmar) return;
+    if(!confirmar){
+        return;
+    }
 
 
-    const { error } =
-        await db
-        .from("pedidos")
-        .update({
+    const {
+        error
+    } =
+    await db
+    .from("pedidos")
+    .update({
 
-            estado:nuevoEstado
+        estado:nuevoEstado
 
-        })
-        .eq(
-            "id",
-            id
-        );
+    })
+    .eq(
+        "id",
+        id
+    );
 
 
     if(error){
+
+        console.error(error);
 
         alert(
             "❌ No se pudo cambiar el estado:\n\n" +
@@ -556,7 +666,8 @@ async function cambiarEstadoPedido(
     alert(
         "✅ Pedido #" +
         id +
-        " actualizado."
+        " actualizado a " +
+        nuevoEstado
     );
 
 
@@ -583,6 +694,10 @@ function escucharPedidos(){
         .channel(
             "pedidos-tiempo-real"
         )
+
+
+        /* NUEVO PEDIDO */
+
         .on(
 
             "postgres_changes",
@@ -596,7 +711,7 @@ function escucharPedidos(){
             function(payload){
 
                 console.log(
-                    "Nuevo pedido:",
+                    "📦 NUEVO PEDIDO:",
                     payload
                 );
 
@@ -611,6 +726,10 @@ function escucharPedidos(){
             }
 
         )
+
+
+        /* ACTUALIZACIÓN */
+
         .on(
 
             "postgres_changes",
@@ -624,7 +743,7 @@ function escucharPedidos(){
             function(payload){
 
                 console.log(
-                    "Pedido actualizado:",
+                    "🔄 PEDIDO ACTUALIZADO:",
                     payload
                 );
 
@@ -636,6 +755,10 @@ function escucharPedidos(){
             }
 
         )
+
+
+        /* ELIMINACIÓN */
+
         .on(
 
             "postgres_changes",
@@ -649,7 +772,7 @@ function escucharPedidos(){
             function(payload){
 
                 console.log(
-                    "Pedido eliminado:",
+                    "🗑️ PEDIDO ELIMINADO:",
                     payload
                 );
 
@@ -661,6 +784,8 @@ function escucharPedidos(){
             }
 
         )
+
+
         .subscribe(
             function(status){
 
@@ -687,7 +812,9 @@ function mostrarNotificacion(){
         );
 
 
-    if(!aviso) return;
+    if(!aviso){
+        return;
+    }
 
 
     aviso.style.display =
@@ -719,23 +846,28 @@ async function cargarProductos(){
         );
 
 
-    if(!lista) return;
+    if(!lista){
+        return;
+    }
 
 
     lista.innerHTML =
         "⏳ Cargando productos...";
 
 
-    const { data, error } =
-        await db
-        .from("productos")
-        .select("*")
-        .order(
-            "id",
-            {
-                ascending:false
-            }
-        );
+    const {
+        data,
+        error
+    } =
+    await db
+    .from("productos")
+    .select("*")
+    .order(
+        "id",
+        {
+            ascending:false
+        }
+    );
 
 
     if(error){
@@ -769,12 +901,15 @@ async function cargarProductos(){
 
 
     lista.innerHTML =
-        data.map(
-            producto =>
-            crearTarjetaProducto(
+        data
+        .map(function(producto){
+
+            return crearTarjetaProducto(
                 producto
-            )
-        ).join("");
+            );
+
+        })
+        .join("");
 
 }
 
@@ -783,15 +918,11 @@ async function cargarProductos(){
    TARJETA PRODUCTO
 ===================================================== */
 
-function crearTarjetaProducto(
-    producto
-){
+function crearTarjetaProducto(producto){
 
     const precio =
-        Number(
-            producto.precio || 0
-        ).toLocaleString(
-            "es-CO"
+        dinero(
+            producto.precio
         );
 
 
@@ -847,12 +978,14 @@ function crearTarjetaProducto(
                     )}
                 </h3>
 
+
                 <p>
                     ${escapeHTML(
                         producto.descripcion ||
                         "Sin descripción"
                     )}
                 </p>
+
 
                 <p>
                     📂
@@ -862,9 +995,11 @@ function crearTarjetaProducto(
                     )}
                 </p>
 
+
                 <p class="product-price">
                     💰 $${precio}
                 </p>
+
 
                 <span class="status">
 
@@ -889,7 +1024,7 @@ function crearTarjetaProducto(
                 class="btn-edit"
                 onclick="
                     editarProducto(
-                        ${producto.id}
+                        ${Number(producto.id)}
                     )
                 "
             >
@@ -901,7 +1036,7 @@ function crearTarjetaProducto(
                 class="btn-toggle"
                 onclick="
                     cambiarDisponibilidad(
-                        ${producto.id},
+                        ${Number(producto.id)},
                         ${disponible}
                     )
                 "
@@ -922,7 +1057,7 @@ function crearTarjetaProducto(
                 class="btn-delete"
                 onclick="
                     eliminarProducto(
-                        ${producto.id}
+                        ${Number(producto.id)}
                     )
                 "
             >
@@ -1106,7 +1241,6 @@ async function guardarProducto(){
 
     limpiarFormulario();
 
-
     await cargarProductos();
 
 }
@@ -1118,15 +1252,18 @@ async function guardarProducto(){
 
 async function editarProducto(id){
 
-    const { data, error } =
-        await db
-        .from("productos")
-        .select("*")
-        .eq(
-            "id",
-            id
-        )
-        .single();
+    const {
+        data,
+        error
+    } =
+    await db
+    .from("productos")
+    .select("*")
+    .eq(
+        "id",
+        id
+    )
+    .single();
 
 
     if(error){
@@ -1186,4 +1323,901 @@ async function editarProducto(id){
             "productoImagen"
         )
         .value =
-        
+        data.imagen_url || "";
+
+
+    document
+        .getElementById(
+            "productoDisponible"
+        )
+        .checked =
+        data.disponible !== false;
+
+
+    document
+        .getElementById(
+            "formTitulo"
+        )
+        .innerText =
+        "✏️ Editar producto";
+
+
+    document
+        .getElementById(
+            "productoMensaje"
+        )
+        .innerText =
+        "Editando producto #" +
+        data.id;
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =====================================================
+   LIMPIAR FORMULARIO
+===================================================== */
+
+function limpiarFormulario(){
+
+    document
+        .getElementById(
+            "productoId"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "productoNombre"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "productoDescripcion"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "productoPrecio"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "productoCategoria"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "productoImagen"
+        )
+        .value = "";
+
+
+    document
+        .getElementById(
+            "productoDisponible"
+        )
+        .checked = true;
+
+
+    document
+        .getElementById(
+            "formTitulo"
+        )
+        .innerText =
+        "➕ Agregar producto";
+
+}
+
+
+/* =====================================================
+   CANCELAR EDICIÓN
+===================================================== */
+
+function cancelarEdicion(){
+
+    limpiarFormulario();
+
+
+    document
+        .getElementById(
+            "productoMensaje"
+        )
+        .innerText = "";
+
+}
+
+
+/* =====================================================
+   CAMBIAR DISPONIBILIDAD
+===================================================== */
+
+async function cambiarDisponibilidad(
+    id,
+    estadoActual
+){
+
+    const nuevoEstado =
+        !estadoActual;
+
+
+    const confirmar =
+        confirm(
+            nuevoEstado
+            ?
+            "¿Activar este producto?"
+            :
+            "¿Desactivar este producto?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    const {
+        error
+    } =
+    await db
+    .from("productos")
+    .update({
+
+        disponible:
+            nuevoEstado
+
+    })
+    .eq(
+        "id",
+        id
+    );
+
+
+    if(error){
+
+        alert(
+            "❌ No se pudo cambiar la disponibilidad:\n\n" +
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    await cargarProductos();
+
+}
+
+
+/* =====================================================
+   ELIMINAR PRODUCTO
+===================================================== */
+
+async function eliminarProducto(id){
+
+    const confirmar =
+        confirm(
+            "⚠️ ¿Está seguro de eliminar este producto?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    const {
+        error
+    } =
+    await db
+    .from("productos")
+    .delete()
+    .eq(
+        "id",
+        id
+    );
+
+
+    if(error){
+
+        alert(
+            "❌ No se pudo eliminar:\n\n" +
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "✅ Producto eliminado."
+    );
+
+
+    await cargarProductos();
+
+}
+
+
+/* =====================================================
+   CLIENTES
+===================================================== */
+
+async function cargarClientes(){
+
+    const lista =
+        document.getElementById(
+            "listaClientes"
+        );
+
+
+    if(!lista){
+        return;
+    }
+
+
+    lista.innerHTML =
+        "⏳ Cargando clientes...";
+
+
+    /*
+       Primero intentamos obtener clientes
+       desde una tabla llamada clientes.
+    */
+
+    const {
+        data,
+        error
+    } =
+    await db
+    .from("clientes")
+    .select("*")
+    .order(
+        "id",
+        {
+            ascending:false
+        }
+    );
+
+
+    if(error){
+
+        console.error(
+            "CLIENTES:",
+            error
+        );
+
+
+        lista.innerHTML = `
+            <div class="order">
+                👥 No se pudo cargar la tabla clientes.
+                <br><br>
+                ${escapeHTML(error.message)}
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    if(!data || data.length === 0){
+
+        lista.innerHTML = `
+            <div class="order">
+                👥 No hay clientes registrados.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    lista.innerHTML =
+        data
+        .map(function(cliente){
+
+            const nombre =
+                cliente.nombre ||
+                cliente.nombre_completo ||
+                "Cliente";
+
+
+            const telefono =
+                cliente.telefono ||
+                "Sin teléfono";
+
+
+            const email =
+                cliente.email ||
+                cliente.correo ||
+                "Sin correo";
+
+
+            return `
+
+            <div class="order">
+
+                <h3>
+                    👤 ${escapeHTML(nombre)}
+                </h3>
+
+                <p>
+                    📞 ${escapeHTML(telefono)}
+                </p>
+
+                <p>
+                    📧 ${escapeHTML(email)}
+                </p>
+
+            </div>
+
+            `;
+
+        })
+        .join("");
+
+}
+
+
+/* =====================================================
+   DOMICILIOS
+===================================================== */
+
+async function cargarDomicilios(){
+
+    const lista =
+        document.getElementById(
+            "listaDomicilios"
+        );
+
+
+    if(!lista){
+        return;
+    }
+
+
+    lista.innerHTML =
+        "⏳ Cargando domicilios...";
+
+
+    const {
+        data,
+        error
+    } =
+    await db
+    .from("pedidos")
+    .select("*")
+    .order(
+        "id",
+        {
+            ascending:false
+        }
+    );
+
+
+    if(error){
+
+        lista.innerHTML = `
+            <div class="order">
+                ❌ Error cargando domicilios.
+                <br><br>
+                ${escapeHTML(error.message)}
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    if(!data || data.length === 0){
+
+        lista.innerHTML = `
+            <div class="order">
+                🚴 No hay domicilios registrados.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    lista.innerHTML =
+        data
+        .map(function(pedido){
+
+            const nombre =
+                pedido.nombre ||
+                pedido.cliente_nombre ||
+                "Cliente";
+
+
+            const telefono =
+                pedido.telefono ||
+                pedido.cliente_telefono ||
+                "Sin teléfono";
+
+
+            const direccion =
+                pedido.direccion ||
+                pedido.cliente_direccion ||
+                "Sin dirección";
+
+
+            const estado =
+                normalizarEstado(
+                    pedido.estado
+                );
+
+
+            return `
+
+            <div class="order">
+
+                <h3>
+                    🚴 Pedido #${escapeHTML(pedido.id)}
+                </h3>
+
+                <p>
+                    👤 ${escapeHTML(nombre)}
+                </p>
+
+                <p>
+                    📞 ${escapeHTML(telefono)}
+                </p>
+
+                <p>
+                    📍 ${escapeHTML(direccion)}
+                </p>
+
+                <p>
+                    💰 $${dinero(pedido.total)}
+                </p>
+
+                <span class="status">
+                    ${escapeHTML(estado)}
+                </span>
+
+            </div>
+
+            `;
+
+        })
+        .join("");
+
+}
+
+
+/* =====================================================
+   VENTAS
+===================================================== */
+
+async function cargarVentas(){
+
+    const elemento =
+        document.getElementById(
+            "ventasDia"
+        );
+
+
+    if(!elemento){
+        return;
+    }
+
+
+    const hoy =
+        new Date();
+
+
+    const inicio =
+        new Date(
+            hoy.getFullYear(),
+            hoy.getMonth(),
+            hoy.getDate()
+        );
+
+
+    const fin =
+        new Date(
+            hoy.getFullYear(),
+            hoy.getMonth(),
+            hoy.getDate() + 1
+        );
+
+
+    const {
+        data,
+        error
+    } =
+    await db
+    .from("pedidos")
+    .select("total,estado,created_at")
+    .gte(
+        "created_at",
+        inicio.toISOString()
+    )
+    .lt(
+        "created_at",
+        fin.toISOString()
+    );
+
+
+    if(error){
+
+        console.error(
+            "VENTAS:",
+            error
+        );
+
+        elemento.innerText =
+            "$0";
+
+        return;
+
+    }
+
+
+    let total = 0;
+
+
+    if(data){
+
+        data.forEach(function(pedido){
+
+            const estado =
+                normalizarEstado(
+                    pedido.estado
+                );
+
+
+            if(
+                estado !== "Cancelado"
+            ){
+
+                total +=
+                    Number(
+                        pedido.total || 0
+                    );
+
+            }
+
+        });
+
+    }
+
+
+    elemento.innerText =
+        "$" +
+        dinero(total);
+
+}
+
+
+/* =====================================================
+   RESUMEN
+===================================================== */
+
+async function actualizarResumen(){
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+        await db
+        .from("pedidos")
+        .select(
+            "id,total,estado"
+        );
+
+
+        if(error){
+
+            console.error(
+                "RESUMEN:",
+                error
+            );
+
+            return;
+
+        }
+
+
+        const pedidos =
+            data || [];
+
+
+        let ventas = 0;
+
+        let enCamino = 0;
+
+
+        pedidos.forEach(
+            function(pedido){
+
+                const estado =
+                    normalizarEstado(
+                        pedido.estado
+                    );
+
+
+                if(
+                    estado !==
+                    "Cancelado"
+                ){
+
+                    ventas +=
+                        Number(
+                            pedido.total || 0
+                        );
+
+                }
+
+
+                if(
+                    estado ===
+                    "En camino"
+                ){
+
+                    enCamino++;
+
+                }
+
+            }
+        );
+
+
+        const totalPedidos =
+            document.getElementById(
+                "totalPedidos"
+            );
+
+
+        const totalVentas =
+            document.getElementById(
+                "totalVentas"
+            );
+
+
+        const totalCamino =
+            document.getElementById(
+                "totalCamino"
+            );
+
+
+        if(totalPedidos){
+
+            totalPedidos.innerText =
+                pedidos.length;
+
+        }
+
+
+        if(totalVentas){
+
+            totalVentas.innerText =
+                "$" +
+                dinero(ventas);
+
+        }
+
+
+        if(totalCamino){
+
+            totalCamino.innerText =
+                enCamino;
+
+        }
+
+
+        /*
+           Clientes:
+           intentamos obtener cantidad
+           de la tabla clientes.
+        */
+
+        const {
+            count
+        } =
+        await db
+        .from("clientes")
+        .select(
+            "*",
+            {
+                count:"exact",
+                head:true
+            }
+        );
+
+
+        const totalClientes =
+            document.getElementById(
+                "totalClientes"
+            );
+
+
+        if(totalClientes){
+
+            totalClientes.innerText =
+                count || 0;
+
+        }
+
+    }catch(e){
+
+        console.error(
+            "ERROR RESUMEN:",
+            e
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   CERRAR SESIÓN
+===================================================== */
+
+async function salir(){
+
+    const confirmar =
+        confirm(
+            "¿Desea cerrar la sesión?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    try{
+
+        await db.auth.signOut();
+
+    }catch(e){
+
+        console.error(e);
+
+    }
+
+
+    if(canalPedidos){
+
+        try{
+
+            await db.removeChannel(
+                canalPedidos
+            );
+
+        }catch(e){
+
+            console.error(e);
+
+        }
+
+        canalPedidos = null;
+
+    }
+
+
+    document
+        .getElementById(
+            "dashboard"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "login"
+        )
+        .style.display =
+        "block";
+
+
+    document
+        .getElementById(
+            "clave"
+        )
+        .value = "";
+
+}
+
+
+/* =====================================================
+   COMPROBAR SESIÓN EXISTENTE
+===================================================== */
+
+async function comprobarSesion(){
+
+    try{
+
+        const {
+            data
+        } =
+        await db.auth.getSession();
+
+
+        const session =
+            data.session;
+
+
+        if(
+            session &&
+            session.user &&
+            session.user.email &&
+            session.user.email.toLowerCase() ===
+            ADMIN_EMAIL
+        ){
+
+            mostrarDashboard(
+                session.user.email
+            );
+
+        }
+
+    }catch(e){
+
+        console.error(
+            "ERROR SESIÓN:",
+            e
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   ESCUCHAR CAMBIOS DE SESIÓN
+===================================================== */
+
+db.auth.onAuthStateChange(
+    function(event, session){
+
+        console.log(
+            "Auth:",
+            event
+        );
+
+    }
+);
+
+
+/* =====================================================
+   INICIAR
+===================================================== */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        comprobarSesion();
+
+    }
+);
+
+</script>
