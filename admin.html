@@ -912,7 +912,466 @@ async function cargarProductos(){
         .join("");
 
 }
+/* =====================================================
+   HISTORIAL DEL CLIENTE
+===================================================== */
 
+async function verHistorialCliente(clienteId){
+
+    try{
+
+        const { data: cliente, error: errorCliente } =
+            await db
+            .from("clientes")
+            .select(`
+                id,
+                nombre,
+                telefono,
+                direccion
+            `)
+            .eq("id", clienteId)
+            .single();
+
+        if(errorCliente){
+
+            alert(
+                "❌ No se pudo cargar el cliente:\n\n" +
+                errorCliente.message
+            );
+
+            return;
+        }
+
+
+        const { data: pedidos, error: errorPedidos } =
+            await db
+            .from("pedidos")
+            .select(`
+                id,
+                total,
+                estado,
+                observaciones,
+                created_at
+            `)
+            .eq(
+                "cliente_id",
+                clienteId
+            )
+            .order(
+                "created_at",
+                {
+                    ascending:false
+                }
+            );
+
+
+        if(errorPedidos){
+
+            alert(
+                "❌ No se pudo cargar el historial:\n\n" +
+                errorPedidos.message
+            );
+
+            return;
+        }
+
+
+        const listaPedidos =
+            pedidos || [];
+
+
+        const totalComprado =
+            listaPedidos.reduce(
+                (suma, pedido) =>
+                    suma +
+                    Number(
+                        pedido.total || 0
+                    ),
+                0
+            );
+
+
+        const totalFormateado =
+            totalComprado.toLocaleString(
+                "es-CO"
+            );
+
+
+        let contenido = "";
+
+
+        if(listaPedidos.length === 0){
+
+            contenido = `
+                <div
+                    style="
+                        padding:20px;
+                        text-align:center;
+                        color:#bbb;
+                    "
+                >
+                    📦 Este cliente todavía
+                    no tiene pedidos.
+                </div>
+            `;
+
+        }else{
+
+            contenido =
+                listaPedidos.map(
+                    pedido => {
+
+                        const total =
+                            Number(
+                                pedido.total || 0
+                            ).toLocaleString(
+                                "es-CO"
+                            );
+
+
+                        const fecha =
+                            pedido.created_at
+                            ?
+                            new Date(
+                                pedido.created_at
+                            ).toLocaleString(
+                                "es-CO"
+                            )
+                            :
+                            "Sin fecha";
+
+
+                        return `
+
+                        <div
+                            style="
+                                background:#202020;
+                                border:1px solid #333;
+                                border-radius:12px;
+                                padding:15px;
+                                margin-top:10px;
+                            "
+                        >
+
+                            <div
+                                style="
+                                    display:flex;
+                                    justify-content:space-between;
+                                    gap:10px;
+                                    flex-wrap:wrap;
+                                "
+                            >
+
+                                <strong
+                                    style="
+                                        color:#ffae19;
+                                        font-size:18px;
+                                    "
+                                >
+                                    🛒 Pedido #${pedido.id}
+                                </strong>
+
+
+                                <strong
+                                    style="
+                                        color:#ffae19;
+                                        font-size:18px;
+                                    "
+                                >
+                                    $${total}
+                                </strong>
+
+                            </div>
+
+
+                            <p
+                                style="
+                                    margin-top:10px;
+                                "
+                            >
+                                📅 ${escapeHTML(fecha)}
+                            </p>
+
+
+                            <p
+                                style="
+                                    margin-top:7px;
+                                "
+                            >
+                                📦 Estado:
+                                <strong>
+                                    ${escapeHTML(
+                                        pedido.estado ||
+                                        "Nuevo"
+                                    )}
+                                </strong>
+                            </p>
+
+
+                            ${
+                                pedido.observaciones
+                                ?
+                                `
+                                <p
+                                    style="
+                                        margin-top:7px;
+                                        color:#bbb;
+                                    "
+                                >
+                                    📝
+                                    ${escapeHTML(
+                                        pedido.observaciones
+                                    )}
+                                </p>
+                                `
+                                :
+                                ""
+                            }
+
+                        </div>
+
+                        `;
+
+                    }
+                ).join("");
+
+        }
+
+
+        abrirModalHistorial(
+
+            cliente,
+
+            contenido,
+
+            totalFormateado
+
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "❌ Error cargando historial:\n\n" +
+            error.message
+        );
+
+    }
+
+               }
+   /* =====================================================
+   MODAL HISTORIAL
+===================================================== */
+
+function abrirModalHistorial(
+    cliente,
+    contenido,
+    totalFormateado
+){
+
+    let modal =
+        document.getElementById(
+            "modalHistorial"
+        );
+
+
+    if(!modal){
+
+        modal =
+            document.createElement(
+                "div"
+            );
+
+        modal.id =
+            "modalHistorial";
+
+
+        modal.style.cssText = `
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,.85);
+            z-index:10000;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+        `;
+
+
+        document.body.appendChild(
+            modal
+        );
+
+    }
+
+
+    modal.innerHTML = `
+
+        <div
+            style="
+                width:100%;
+                max-width:700px;
+                max-height:90vh;
+                overflow:auto;
+                background:#171717;
+                border:1px solid #ffae19;
+                border-radius:20px;
+                padding:25px;
+                box-shadow:0 10px 40px #000;
+            "
+        >
+
+            <div
+                style="
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    gap:15px;
+                "
+            >
+
+                <h2
+                    style="
+                        color:#ffae19;
+                        margin:0;
+                    "
+                >
+                    👤 Historial
+                </h2>
+
+
+                <button
+                    onclick="cerrarModalHistorial()"
+                    style="
+                        background:#dc3545;
+                        color:white;
+                        font-size:18px;
+                    "
+                >
+                    ✕
+                </button>
+
+            </div>
+
+
+            <div
+                style="
+                    margin-top:20px;
+                    padding:18px;
+                    background:#202020;
+                    border-radius:15px;
+                "
+            >
+
+                <h3>
+                    ${escapeHTML(
+                        cliente.nombre
+                    )}
+                </h3>
+
+                <p style="margin-top:8px;">
+                    📱
+                    ${escapeHTML(
+                        cliente.telefono
+                    )}
+                </p>
+
+                <p style="margin-top:8px;">
+                    📍
+                    ${escapeHTML(
+                        cliente.direccion
+                    )}
+                </p>
+
+            </div>
+
+
+            <div
+                style="
+                    margin-top:20px;
+                    padding:18px;
+                    background:#202020;
+                    border-radius:15px;
+                    border-left:4px solid #ffae19;
+                "
+            >
+
+                <p>
+                    💰 Total comprado
+                </p>
+
+                <strong
+                    style="
+                        display:block;
+                        margin-top:5px;
+                        color:#ffae19;
+                        font-size:30px;
+                    "
+                >
+                    $${totalFormateado}
+                </strong>
+
+            </div>
+
+
+            <h3
+                style="
+                    color:#ffae19;
+                    margin-top:25px;
+                "
+            >
+                🛒 Pedidos
+            </h3>
+
+
+            <div>
+                ${contenido}
+            </div>
+
+
+            <button
+                onclick="cerrarModalHistorial()"
+                style="
+                    width:100%;
+                    background:#555;
+                    color:white;
+                    margin-top:20px;
+                "
+            >
+                CERRAR
+            </button>
+
+        </div>
+
+    `;
+
+
+    modal.style.display =
+        "flex";
+
+                      }
+
+   /* =====================================================
+   CERRAR MODAL
+===================================================== */
+
+function cerrarModalHistorial(){
+
+    const modal =
+        document.getElementById(
+            "modalHistorial"
+        );
+
+    if(modal){
+
+        modal.remove();
+
+    }
+
+}
+   
 
 /* =====================================================
    TARJETA PRODUCTO
