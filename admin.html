@@ -345,20 +345,85 @@ button{
 
   <!-- PRODUCTOS -->
   <div id="productos" class="section" style="display:none">
+<h2>🍔 Productos</h2>
 
-    <h2>🍔 Productos</h2>
+<div class="product-admin">
 
     <div class="order">
-      <strong>Gestión de productos</strong>
+        <h3 id="formTitulo">➕ Agregar producto</h3>
 
-      <p style="margin-top:8px">
-        Aquí podremos agregar, modificar,
-        eliminar y activar productos.
-      </p>
+        <input type="hidden" id="productoId">
+
+        <input
+            type="text"
+            id="productoNombre"
+            placeholder="Nombre del producto"
+        >
+
+        <input
+            type="text"
+            id="productoDescripcion"
+            placeholder="Descripción"
+        >
+
+        <input
+            type="number"
+            id="productoPrecio"
+            placeholder="Precio"
+            min="0"
+        >
+
+        <input
+            type="text"
+            id="productoCategoria"
+            placeholder="Categoría"
+        >
+
+        <input
+            type="url"
+            id="productoImagen"
+            placeholder="URL de la imagen"
+        >
+
+        <label style="display:block;margin:12px 0;text-align:left;">
+            <input
+                type="checkbox"
+                id="productoDisponible"
+                checked
+                style="width:auto;margin-right:8px;"
+            >
+            Producto disponible
+        </label>
+
+        <button
+            type="button"
+            onclick="guardarProducto()"
+            style="background:#ffae19;color:#111;width:100%;margin-bottom:8px;"
+        >
+            💾 GUARDAR PRODUCTO
+        </button>
+
+        <button
+            type="button"
+            onclick="cancelarEdicion()"
+            style="background:#555;color:white;width:100%;"
+        >
+            ❌ CANCELAR
+        </button>
+
+        <p id="productoMensaje"></p>
     </div>
 
-  </div>
+    <div class="order">
+        <h3>📋 Productos registrados</h3>
 
+        <div id="listaProductos">
+            Cargando productos...
+        </div>
+    </div>
+
+</div>
+    
 
   <!-- CLIENTES -->
   <div id="clientes" class="section" style="display:none">
@@ -1166,7 +1231,460 @@ async function comprobarSesion(){
 /* Ejecutar al cargar */
 
 comprobarSesion();
+/* =====================================================
+   GESTIÓN DE PRODUCTOS
+   ===================================================== */
 
+async function cargarProductos(){
+
+    const lista = document.getElementById("listaProductos");
+
+    if(!lista) return;
+
+    lista.innerHTML = "⏳ Cargando productos...";
+
+    const { data, error } = await db
+        .from("productos")
+        .select("*")
+        .order("id", { ascending:false });
+
+    if(error){
+
+        console.error(error);
+
+        lista.innerHTML =
+            "❌ Error cargando productos:<br>" +
+            error.message;
+
+        return;
+    }
+
+    if(!data || data.length === 0){
+
+        lista.innerHTML =
+            "<p>No hay productos registrados.</p>";
+
+        return;
+    }
+
+    lista.innerHTML = "";
+
+    data.forEach(producto => {
+
+        const tarjeta = document.createElement("div");
+
+        tarjeta.className = "order";
+
+        tarjeta.style.marginTop = "12px";
+        tarjeta.style.textAlign = "left";
+
+        tarjeta.innerHTML = `
+
+            <div style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;">
+
+                ${
+                    producto.imagen_url
+                    ?
+                    `<img
+                        src="${producto.imagen_url}"
+                        style="
+                            width:90px;
+                            height:90px;
+                            object-fit:cover;
+                            border-radius:12px;
+                        "
+                        onerror="this.style.display='none'"
+                    >`
+                    :
+                    `<div style="
+                        width:90px;
+                        height:90px;
+                        border-radius:12px;
+                        background:#333;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:35px;
+                    ">🍔</div>`
+                }
+
+                <div style="flex:1;min-width:200px;">
+
+                    <h3 style="margin:0;color:#ffae19;">
+                        ${producto.nombre || "Sin nombre"}
+                    </h3>
+
+                    <p style="margin:6px 0;">
+                        ${producto.descripcion || "Sin descripción"}
+                    </p>
+
+                    <strong style="font-size:20px;">
+                        $${Number(producto.precio || 0).toLocaleString("es-CO")}
+                    </strong>
+
+                    <p style="margin:5px 0;">
+                        📂 ${producto.categoria || "Sin categoría"}
+                    </p>
+
+                    <span class="status">
+                        ${
+                            producto.disponible
+                            ? "🟢 Disponible"
+                            : "🔴 No disponible"
+                        }
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div style="
+                display:flex;
+                gap:8px;
+                flex-wrap:wrap;
+                margin-top:15px;
+            ">
+
+                <button
+                    type="button"
+                    onclick="editarProducto(${producto.id})"
+                    style="background:#3498db;color:white;"
+                >
+                    ✏️ EDITAR
+                </button>
+
+                <button
+                    type="button"
+                    onclick="cambiarDisponibilidad(${producto.id}, ${producto.disponible})"
+                    style="background:#777;color:white;"
+                >
+                    ${
+                        producto.disponible
+                        ? "🔴 DESACTIVAR"
+                        : "🟢 ACTIVAR"
+                    }
+                </button>
+
+                <button
+                    type="button"
+                    onclick="eliminarProducto(${producto.id})"
+                    style="background:#e53935;color:white;"
+                >
+                    🗑️ ELIMINAR
+                </button>
+
+            </div>
+        `;
+
+        lista.appendChild(tarjeta);
+
+    });
+
+}
+
+
+/* =====================================================
+   GUARDAR PRODUCTO
+   ===================================================== */
+
+async function guardarProducto(){
+
+    const id =
+        document.getElementById("productoId").value;
+
+    const nombre =
+        document.getElementById("productoNombre").value.trim();
+
+    const descripcion =
+        document.getElementById("productoDescripcion").value.trim();
+
+    const precio =
+        Number(document.getElementById("productoPrecio").value);
+
+    const categoria =
+        document.getElementById("productoCategoria").value.trim();
+
+    const imagen_url =
+        document.getElementById("productoImagen").value.trim();
+
+    const disponible =
+        document.getElementById("productoDisponible").checked;
+
+    const mensaje =
+        document.getElementById("productoMensaje");
+
+
+    if(!nombre){
+
+        mensaje.innerText =
+            "⚠️ Escriba el nombre del producto.";
+
+        return;
+    }
+
+    if(!precio || precio < 0){
+
+        mensaje.innerText =
+            "⚠️ Escriba un precio válido.";
+
+        return;
+    }
+
+
+    const producto = {
+
+        nombre: nombre,
+
+        descripcion:
+            descripcion || null,
+
+        precio: precio,
+
+        categoria:
+            categoria || null,
+
+        imagen_url:
+            imagen_url || null,
+
+        disponible:
+            disponible
+
+    };
+
+
+    mensaje.innerText =
+        "⏳ Guardando...";
+
+
+    let resultado;
+
+
+    if(id){
+
+        resultado = await db
+            .from("productos")
+            .update(producto)
+            .eq("id", Number(id));
+
+    }else{
+
+        resultado = await db
+            .from("productos")
+            .insert([producto]);
+
+    }
+
+
+    if(resultado.error){
+
+        console.error(resultado.error);
+
+        mensaje.innerText =
+            "❌ Error: " +
+            resultado.error.message;
+
+        return;
+    }
+
+
+    mensaje.innerText =
+        "✅ Producto guardado correctamente.";
+
+    limpiarFormulario();
+
+    await cargarProductos();
+
+}
+
+
+/* =====================================================
+   EDITAR PRODUCTO
+   ===================================================== */
+
+async function editarProducto(id){
+
+    const { data, error } = await db
+        .from("productos")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+
+    if(error){
+
+        alert(
+            "❌ No se pudo cargar el producto:\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    document.getElementById("productoId").value =
+        data.id;
+
+    document.getElementById("productoNombre").value =
+        data.nombre || "";
+
+    document.getElementById("productoDescripcion").value =
+        data.descripcion || "";
+
+    document.getElementById("productoPrecio").value =
+        data.precio || "";
+
+    document.getElementById("productoCategoria").value =
+        data.categoria || "";
+
+    document.getElementById("productoImagen").value =
+        data.imagen_url || "";
+
+    document.getElementById("productoDisponible").checked =
+        data.disponible !== false;
+
+
+    document.getElementById("formTitulo").innerText =
+        "✏️ Editando producto";
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =====================================================
+   CAMBIAR DISPONIBILIDAD
+   ===================================================== */
+
+async function cambiarDisponibilidad(id, estadoActual){
+
+    const nuevoEstado =
+        !estadoActual;
+
+
+    const { error } = await db
+        .from("productos")
+        .update({
+            disponible:nuevoEstado
+        })
+        .eq("id", id);
+
+
+    if(error){
+
+        alert(
+            "❌ No se pudo cambiar el estado:\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    await cargarProductos();
+
+}
+
+
+/* =====================================================
+   ELIMINAR PRODUCTO
+   ===================================================== */
+
+async function eliminarProducto(id){
+
+    const confirmar =
+        confirm(
+            "⚠️ ¿Está seguro de eliminar este producto?"
+        );
+
+
+    if(!confirmar) return;
+
+
+    const { error } = await db
+        .from("productos")
+        .delete()
+        .eq("id", id);
+
+
+    if(error){
+
+        alert(
+            "❌ No se pudo eliminar:\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    alert(
+        "✅ Producto eliminado correctamente."
+    );
+
+
+    await cargarProductos();
+
+}
+
+
+/* =====================================================
+   LIMPIAR FORMULARIO
+   ===================================================== */
+
+function limpiarFormulario(){
+
+    document.getElementById("productoId").value = "";
+
+    document.getElementById("productoNombre").value = "";
+
+    document.getElementById("productoDescripcion").value = "";
+
+    document.getElementById("productoPrecio").value = "";
+
+    document.getElementById("productoCategoria").value = "";
+
+    document.getElementById("productoImagen").value = "";
+
+    document.getElementById("productoDisponible").checked = true;
+
+    document.getElementById("formTitulo").innerText =
+        "➕ Agregar producto";
+
+}
+
+
+/* =====================================================
+   CANCELAR EDICIÓN
+   ===================================================== */
+
+function cancelarEdicion(){
+
+    limpiarFormulario();
+
+    const mensaje =
+        document.getElementById("productoMensaje");
+
+    if(mensaje){
+
+        mensaje.innerText = "";
+
+    }
+
+}
+
+
+/* =====================================================
+   CARGAR PRODUCTOS AL ABRIR PRODUCTOS
+   ===================================================== */
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    cargarProductos();
+
+});
 </script>
 
 </body>
