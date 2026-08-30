@@ -1240,15 +1240,363 @@ function escucharPedidos(){
             );
 
 
-            mostrarNotificacion();
+           /* =====================================================
+   PEDIDOS EN TIEMPO REAL
+   ===================================================== */
+
+function escucharPedidos() {
+
+  console.log("🟢 Activando pedidos en tiempo real...");
+
+  db
+    .channel("pedidos-tiempo-real")
+
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "pedidos"
+      },
+      function(payload) {
+
+        console.log("🔔 Cambio detectado en pedidos:", payload);
+
+        // Recargar los pedidos
+        cargarPedidos();
+
+        // Actualizar resumen
+        cargarResumen();
+
+      }
+    )
+
+    .subscribe(function(status) {
+
+      console.log(
+        "Estado Realtime:",
+        status
+      );
+
+    });
+
+}
 
 
-            cargarPedidos();
+/* =====================================================
+   CARGAR PEDIDOS
+   ===================================================== */
 
-            actualizarResumen();
+async function cargarPedidos() {
 
-            cargarDomicilios();
+  const lista =
+    document.getElementById("listaPedidos");
 
-            cargarVentas();
+  if (!lista) return;
+
+  lista.innerHTML = `
+    <p style="color:#ffae19;text-align:center;">
+      ⏳ Cargando pedidos...
+    </p>
+  `;
+
+  const { data, error } = await db
+    .from("pedidos")
+    .select("*")
+    .order("id", {
+      ascending: false
+    });
+
+  if (error) {
+
+    console.error(
+      "Error cargando pedidos:",
+      error
+    );
+
+    lista.innerHTML = `
+      <div class="order">
+        ❌ Error cargando pedidos.
+        <br><br>
+        ${error.message}
+      </div>
+    `;
+
+    return;
+  }
+
+  if (!data || data.length === 0) {
+
+    lista.innerHTML = `
+      <div class="order">
+        <strong>No hay pedidos registrados.</strong>
+        <br>
+        Los nuevos pedidos aparecerán automáticamente.
+      </div>
+    `;
+
+    return;
+  }
+
+  lista.innerHTML = data.map(pedido => {
+
+    const total =
+      Number(pedido.total || 0)
+        .toLocaleString("es-CO");
+
+    return `
+      <div class="order">
+
+        <div style="
+          display:flex;
+          justify-content:space-between;
+          gap:10px;
+          flex-wrap:wrap;
+        ">
+
+          <div>
+
+            <h3 style="color:#ffae19;">
+              🛒 Pedido #${pedido.id}
+            </h3>
+
+            <p>
+              👤 ${pedido.nombre || "Cliente"}
+            </p>
+
+            <p>
+              📞 ${pedido.telefono || "Sin teléfono"}
+            </p>
+
+            <p>
+              📍 ${pedido.direccion || "Sin dirección"}
+            </p>
+
+          </div>
+
+          <strong style="
+            color:#ffae19;
+            font-size:24px;
+          ">
+            $${total}
+          </strong>
+
+        </div>
+
+        <div style="margin-top:12px;">
+
+          <span class="status">
+            ${pedido.estado || "pendiente"}
+          </span>
+
+        </div>
+
+        <div style="
+          display:flex;
+          gap:8px;
+          flex-wrap:wrap;
+          margin-top:15px;
+        ">
+
+          <button
+            onclick="cambiarEstadoPedido(${pedido.id}, 'confirmado')"
+            style="background:#3498db;color:white;"
+          >
+            ✅ CONFIRMAR
+          </button>
+
+          <button
+            onclick="cambiarEstadoPedido(${pedido.id}, 'en_camino')"
+            style="background:#ffae19;color:#111;"
+          >
+            🚴 EN CAMINO
+          </button>
+
+          <button
+            onclick="cambiarEstadoPedido(${pedido.id}, 'entregado')"
+            style="background:#28a745;color:white;"
+          >
+            🟢 ENTREGADO
+          </button>
+
+          <button
+            onclick="cambiarEstadoPedido(${pedido.id}, 'cancelado')"
+            style="background:#dc3545;color:white;"
+          >
+            ❌ CANCELAR
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+  }).join("");
+
+}
+
+
+/* =====================================================
+   CAMBIAR ESTADO DEL PEDIDO
+   ===================================================== */
+
+async function cambiarEstadoPedido(id, nuevoEstado) {
+
+  const { error } = await db
+    .from("pedidos")
+    .update({
+      estado: nuevoEstado
+    })
+    .eq("id", id);
+
+  if (error) {
+
+    console.error(error);
+
+    alert(
+      "❌ No se pudo actualizar el pedido:\n\n" +
+      error.message
+    );
+
+    return;
+  }
+
+  console.log(
+    "✅ Pedido actualizado:",
+    id,
+    nuevoEstado
+  );
+
+  await cargarPedidos();
+
+}
+
+
+/* =====================================================
+   RESUMEN DEL ADMINISTRADOR
+   ===================================================== */
+
+async function cargarResumen() {
+
+  const { data, error } = await db
+    .from("pedidos")
+    .select("id,total,estado");
+
+  if (error) {
+
+    console.error(
+      "Error cargando resumen:",
+      error
+    );
+
+    return;
+  }
+
+  const pedidos =
+    data || [];
+
+  const totalPedidos =
+    pedidos.length;
+
+  const totalVentas =
+    pedidos
+      .filter(p => p.estado !== "cancelado")
+      .reduce(
+        (suma, p) =>
+          suma + Number(p.total || 0),
+        0
+      );
+
+  const enCamino =
+    pedidos.filter(
+      p => p.estado === "en_camino"
+    ).length;
+
+
+  document.getElementById(
+    "totalPedidos"
+  ).innerText =
+    totalPedidos;
+
+
+  document.getElementById(
+    "totalVentas"
+  ).innerText =
+    "$" +
+    totalVentas.toLocaleString("es-CO");
+
+
+  document.getElementById(
+    "totalCamino"
+  ).innerText =
+    enCamino;
+
+
+  const ventasDia =
+    document.getElementById("ventasDia");
+
+  if (ventasDia) {
+
+    ventasDia.innerText =
+      "$" +
+      totalVentas.toLocaleString("es-CO");
+
+  }
+
+}
+
+
+/* =====================================================
+   INICIAR SISTEMA
+   ===================================================== */
+
+async function iniciarAdministrador() {
+
+  await cargarProductos();
+
+  await cargarPedidos();
+
+  await cargarResumen();
+
+  escucharPedidos();
+
+}
+
+
+/* =====================================================
+   CUANDO EL ADMIN YA ESTÁ AUTENTICADO
+   ===================================================== */
+
+db.auth.onAuthStateChange(
+  function(event, session) {
+
+    if (
+      session &&
+      session.user &&
+      session.user.email &&
+      session.user.email
+        .toLowerCase() === ADMIN_EMAIL
+    ) {
+
+      document.getElementById(
+        "login"
+      ).style.display = "none";
+
+      document.getElementById(
+        "dashboard"
+      ).style.display = "block";
+
+      document.getElementById(
+        "adminEmail"
+      ).innerText =
+        "Administrador: " +
+        session.user.email;
+
+      iniciarAdministrador();
+
+    }
+
+  }
+); 
 
   
