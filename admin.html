@@ -1,479 +1,796 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Administrador - El Imperio Burger</title>
 
-<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
 body{
-  font-family:Arial,sans-serif;
-  background:#0b0b0b;
-  color:white;
+    font-family:Arial,sans-serif;
+    background:#0b0b0b;
+    color:white;
 }
 
 header{
-  background:#111;
-  border-bottom:2px solid #f5a900;
-  padding:20px;
-  text-align:center;
+    background:#111;
+    border-bottom:2px solid #f5a900;
+    padding:25px 15px;
+    text-align:center;
 }
 
 header h1{
-  color:#ffae19;
-  font-size:28px;
+    color:#ffae19;
+    font-size:30px;
 }
 
 header p{
-  color:#bbb;
-  margin-top:5px;
+    color:#bbb;
+    margin-top:7px;
 }
 
 .container{
-  max-width:1200px;
-  margin:auto;
-  padding:20px;
+    max-width:1250px;
+    margin:auto;
+    padding:20px;
 }
 
+/* LOGIN */
+
 .login{
-  max-width:560px;
-  margin:60px auto;
-  background:#171717;
-  padding:35px;
-  border-radius:18px;
-  border:1px solid #333;
-  text-align:center;
+    max-width:550px;
+    margin:60px auto;
+    background:#171717;
+    padding:35px;
+    border-radius:20px;
+    border:1px solid #333;
+    text-align:center;
 }
 
 .login h2{
-  color:#ffae19;
-  margin-bottom:25px;
-  font-size:30px;
+    color:#ffae19;
+    margin-bottom:25px;
+    font-size:30px;
 }
 
 input{
-  width:100%;
-  padding:15px;
-  margin:8px 0;
-  border-radius:10px;
-  border:1px solid #444;
-  background:#222;
-  color:white;
-  font-size:16px;
+    width:100%;
+    padding:15px;
+    margin:8px 0;
+    border-radius:10px;
+    border:1px solid #444;
+    background:#222;
+    color:white;
+    font-size:16px;
 }
 
 input:focus{
-  outline:none;
-  border-color:#ffae19;
+    outline:none;
+    border-color:#ffae19;
 }
 
 button{
-  border:0;
-  border-radius:10px;
-  padding:13px 18px;
-  cursor:pointer;
-  font-weight:bold;
+    border:0;
+    border-radius:10px;
+    padding:13px 18px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:active{
+    transform:scale(.98);
 }
 
 .btn-login{
-  width:100%;
-  margin-top:10px;
-  background:#ffae19;
-  color:#111;
-  font-size:16px;
-}
-
-.btn-login:disabled{
-  opacity:.6;
-  cursor:not-allowed;
-}
-
-.dashboard{
-  display:none;
-}
-
-.menu{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-  gap:15px;
-  margin-bottom:25px;
-}
-
-.menu button{
-  background:#191919;
-  color:white;
-  border:1px solid #333;
-  padding:20px 10px;
-  font-size:15px;
-}
-
-.menu button:hover{
-  border-color:#ffae19;
-  color:#ffae19;
-}
-
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:15px;
-}
-
-.card{
-  background:#171717;
-  border:1px solid #333;
-  border-radius:15px;
-  padding:22px;
-}
-
-.card h3{
-  color:#ffae19;
-  margin-bottom:10px;
-}
-
-.card strong{
-  font-size:30px;
-}
-
-.section{
-  background:#171717;
-  border:1px solid #333;
-  border-radius:15px;
-  padding:20px;
-  margin-top:20px;
-}
-
-.section h2{
-  color:#ffae19;
-  margin-bottom:15px;
-}
-
-.order{
-  background:#222;
-  border-radius:12px;
-  padding:15px;
-  margin-top:12px;
-  border-left:4px solid #ffae19;
-}
-
-.status{
-  display:inline-block;
-  padding:7px 10px;
-  border-radius:20px;
-  background:#333;
-  margin-top:10px;
-  font-size:13px;
-}
-
-.logout{
-  background:#d33;
-  color:white;
-  margin-top:20px;
+    width:100%;
+    margin-top:10px;
+    background:#ffae19;
+    color:#111;
+    font-size:16px;
 }
 
 #error{
-  color:#ff5555;
-  margin-top:15px;
+    color:#ff5555;
+    margin-top:15px;
 }
 
 #loading{
-  color:#ffae19;
-  margin-top:12px;
-  display:none;
+    color:#ffae19;
+    margin-top:12px;
+    display:none;
 }
 
+/* DASHBOARD */
+
+.dashboard{
+    display:none;
+}
+
+.menu{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.menu button{
+    background:#191919;
+    color:white;
+    border:1px solid #333;
+    padding:20px 10px;
+    font-size:15px;
+}
+
+.menu button:hover{
+    border-color:#ffae19;
+    color:#ffae19;
+}
+
+.section{
+    background:#171717;
+    border:1px solid #333;
+    border-radius:18px;
+    padding:22px;
+    margin-top:20px;
+}
+
+.section h2{
+    color:#ffae19;
+    margin-bottom:18px;
+    font-size:28px;
+}
+
+/* CARDS */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.card{
+    background:#202020;
+    border:1px solid #333;
+    border-radius:15px;
+    padding:22px;
+}
+
+.card h3{
+    color:#ffae19;
+    margin-bottom:10px;
+}
+
+.card strong{
+    font-size:30px;
+}
+
+/* PEDIDOS */
+
+.order{
+    background:#222;
+    border-radius:14px;
+    padding:18px;
+    margin-top:12px;
+    border-left:4px solid #ffae19;
+}
+
+.order h3{
+    color:#ffae19;
+    margin-bottom:10px;
+}
+
+.order p{
+    margin:7px 0;
+    color:#ddd;
+}
+
+.status{
+    display:inline-block;
+    padding:8px 12px;
+    border-radius:20px;
+    background:#333;
+    margin-top:10px;
+    font-size:13px;
+}
+
+/* PRODUCTOS */
+
+.product-card{
+    background:#191919;
+    border:1px solid #333;
+    border-radius:15px;
+    padding:15px;
+    margin-top:12px;
+}
+
+.product-content{
+    display:flex;
+    gap:15px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.product-img{
+    width:100px;
+    height:100px;
+    object-fit:cover;
+    border-radius:12px;
+    border:1px solid #444;
+    background:#333;
+}
+
+.product-info{
+    flex:1;
+    min-width:200px;
+}
+
+.product-info h3{
+    color:#ffae19;
+    margin-bottom:7px;
+}
+
+.product-info p{
+    margin:5px 0;
+    color:#ccc;
+}
+
+.product-price{
+    color:#ffae19;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.product-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:15px;
+}
+
+.btn-edit{
+    background:#1976d2;
+    color:white;
+}
+
+.btn-toggle{
+    background:#777;
+    color:white;
+}
+
+.btn-delete{
+    background:#dc3545;
+    color:white;
+}
+
+/* FORMULARIO */
+
+.form-producto{
+    background:#202020;
+    border-left:5px solid #ffae19;
+    border-radius:15px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.form-producto h3{
+    color:white;
+    margin-bottom:15px;
+    font-size:22px;
+}
+
+.btn-save{
+    width:100%;
+    background:#ffae19;
+    color:#111;
+    margin-top:10px;
+}
+
+.btn-cancel{
+    width:100%;
+    background:#555;
+    color:white;
+    margin-top:8px;
+}
+
+#productoMensaje{
+    margin-top:12px;
+    color:#ffae19;
+}
+
+/* ADMIN */
+
 .admin-email{
-  color:#aaa;
-  margin-top:8px;
-  font-size:14px;
+    color:#aaa;
+    margin-bottom:18px;
+}
+
+/* BOTONES */
+
+.btn-refresh{
+    background:#666;
+    color:white;
+    float:right;
+}
+
+.logout{
+    background:#d33;
+    color:white;
+    margin-top:20px;
+    padding:15px 25px;
+}
+
+/* NOTIFICACIÓN */
+
+#notificacion{
+    display:none;
+    position:fixed;
+    right:20px;
+    top:20px;
+    z-index:9999;
+    background:#ffae19;
+    color:#111;
+    padding:18px 22px;
+    border-radius:14px;
+    font-weight:bold;
+    box-shadow:0 5px 25px #000;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+    .menu{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
 }
 
 @media(max-width:600px){
-  header h1{
-    font-size:22px;
-  }
 
-  .container{
-    padding:12px;
-  }
+    header h1{
+        font-size:23px;
+    }
 
-  .login{
-    margin:35px auto;
-    padding:25px;
-  }
+    .container{
+        padding:12px;
+    }
+
+    .menu{
+        grid-template-columns:repeat(2,1fr);
+        gap:10px;
+    }
+
+    .menu button{
+        padding:17px 5px;
+    }
+
+    .cards{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .card strong{
+        font-size:25px;
+    }
+
+    .section{
+        padding:15px;
+    }
+
+    .login{
+        margin:35px auto;
+        padding:25px;
+    }
+
 }
+
 </style>
+
 </head>
 
 <body>
 
+<div id="notificacion">
+    🔔 ¡Nuevo pedido recibido!
+</div>
+
 <header>
-  <h1>🍔 EL IMPERIO BURGER</h1>
-  <p>Panel de Administración</p>
+
+    <h1>🍔 EL IMPERIO BURGER</h1>
+
+    <p>Panel de Administración</p>
+
 </header>
 
 <div class="container">
 
-<!-- LOGIN -->
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+
 <div class="login" id="login">
 
-  <h2>🔐 Administrador</h2>
+    <h2>🔐 Administrador</h2>
 
-  <input
-    type="email"
-    id="usuario"
-    placeholder="Correo electrónico"
-    autocomplete="email"
-  >
+    <input
+        type="email"
+        id="usuario"
+        placeholder="Correo electrónico"
+        autocomplete="email"
+    >
 
-  <input
-    type="password"
-    id="clave"
-    placeholder="Contraseña"
-    autocomplete="current-password"
-  >
+    <input
+        type="password"
+        id="clave"
+        placeholder="Contraseña"
+        autocomplete="current-password"
+    >
 
-  <button
-    class="btn-login"
-    id="btnLogin"
-    onclick="entrar()"
-  >
-    INGRESAR
-  </button>
+    <button
+        class="btn-login"
+        id="btnLogin"
+        onclick="entrar()"
+    >
+        INGRESAR
+    </button>
 
-  <p id="loading">Verificando acceso...</p>
+    <p id="loading">
+        Verificando acceso...
+    </p>
 
-  <p id="error"></p>
+    <p id="error"></p>
 
 </div>
 
 
-<!-- PANEL -->
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
 <div class="dashboard" id="dashboard">
 
-  <div class="menu">
+    <!-- MENU -->
 
-    <button onclick="mostrar('inicio')">
-      📊 Inicio
-    </button>
+    <div class="menu">
 
-    <button onclick="mostrar('pedidos')">
-      🛒 Pedidos
-    </button>
-
-    <button onclick="mostrar('productos')">
-      🍔 Productos
-    </button>
-
-    <button onclick="mostrar('clientes')">
-      👥 Clientes
-    </button>
-
-    <button onclick="mostrar('domicilios')">
-      🚴 Domicilios
-    </button>
-
-    <button onclick="mostrar('ventas')">
-      💰 Ventas
-    </button>
-
-  </div>
-
-
-  <!-- INICIO -->
-  <div id="inicio" class="section">
-
-    <h2>📊 Resumen</h2>
-
-    <p class="admin-email" id="adminEmail"></p>
-
-    <div class="cards">
-
-      <div class="card">
-        <h3>Pedidos</h3>
-        <strong id="totalPedidos">0</strong>
-      </div>
-
-      <div class="card">
-        <h3>Ventas</h3>
-        <strong id="totalVentas">$0</strong>
-      </div>
-
-      <div class="card">
-        <h3>Clientes</h3>
-        <strong id="totalClientes">0</strong>
-      </div>
-
-      <div class="card">
-        <h3>En camino</h3>
-        <strong id="totalCamino">0</strong>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- PEDIDOS -->
-  <div id="pedidos" class="section" style="display:none">
-
-    <h2>🛒 Pedidos</h2>
-
-    <div id="listaPedidos">
-
-      <div class="order">
-        <strong>No hay pedidos registrados todavía.</strong>
-        <br>
-        Los nuevos pedidos aparecerán aquí.
-        <br>
-        <span class="status">Esperando pedidos</span>
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- PRODUCTOS -->
-  <div id="productos" class="section" style="display:none">
-<h2>🍔 Productos</h2>
-
-<div class="product-admin">
-
-    <div class="order">
-        <h3 id="formTitulo">➕ Agregar producto</h3>
-
-        <input type="hidden" id="productoId">
-
-        <input
-            type="text"
-            id="productoNombre"
-            placeholder="Nombre del producto"
-        >
-
-        <input
-            type="text"
-            id="productoDescripcion"
-            placeholder="Descripción"
-        >
-
-        <input
-            type="number"
-            id="productoPrecio"
-            placeholder="Precio"
-            min="0"
-        >
-
-        <input
-            type="text"
-            id="productoCategoria"
-            placeholder="Categoría"
-        >
-
-        <input
-            type="url"
-            id="productoImagen"
-            placeholder="URL de la imagen"
-        >
-
-        <label style="display:block;margin:12px 0;text-align:left;">
-            <input
-                type="checkbox"
-                id="productoDisponible"
-                checked
-                style="width:auto;margin-right:8px;"
-            >
-            Producto disponible
-        </label>
-
-        <button
-            type="button"
-            onclick="guardarProducto()"
-            style="background:#ffae19;color:#111;width:100%;margin-bottom:8px;"
-        >
-            💾 GUARDAR PRODUCTO
+        <button onclick="mostrar('inicio')">
+            📊 Inicio
         </button>
 
-        <button
-            type="button"
-            onclick="cancelarEdicion()"
-            style="background:#555;color:white;width:100%;"
-        >
-            ❌ CANCELAR
+        <button onclick="mostrar('pedidos')">
+            🛒 Pedidos
         </button>
 
-        <p id="productoMensaje"></p>
+        <button onclick="mostrar('productos')">
+            🍔 Productos
+        </button>
+
+        <button onclick="mostrar('clientes')">
+            👥 Clientes
+        </button>
+
+        <button onclick="mostrar('domicilios')">
+            🚴 Domicilios
+        </button>
+
+        <button onclick="mostrar('ventas')">
+            💰 Ventas
+        </button>
+
     </div>
 
-    <div class="order">
-        <h3>📋 Productos registrados</h3>
 
-        <div id="listaProductos">
-            Cargando productos...
+    <!-- =================================================
+         INICIO
+    ================================================== -->
+
+    <div
+        id="inicio"
+        class="section"
+    >
+
+        <h2>📊 Resumen</h2>
+
+        <p
+            class="admin-email"
+            id="adminEmail"
+        ></p>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <h3>🛒 Pedidos</h3>
+
+                <strong id="totalPedidos">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>💰 Ventas</h3>
+
+                <strong id="totalVentas">
+                    $0
+                </strong>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>👥 Clientes</h3>
+
+                <strong id="totalClientes">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>🚴 En camino</h3>
+
+                <strong id="totalCamino">
+                    0
+                </strong>
+
+            </div>
+
         </div>
-    </div>
-
-</div>
-    
-
-  <!-- CLIENTES -->
-  <div id="clientes" class="section" style="display:none">
-
-    <h2>👥 Clientes</h2>
-
-    <div class="order">
-      Todavía no hay clientes registrados.
-    </div>
-
-  </div>
-
-
-  <!-- DOMICILIOS -->
-  <div id="domicilios" class="section" style="display:none">
-
-    <h2>🚴 Domicilios</h2>
-
-    <div class="order">
-      Aquí aparecerán los domicilios pendientes,
-      en camino y entregados.
-    </div>
-
-  </div>
-
-
-  <!-- VENTAS -->
-  <div id="ventas" class="section" style="display:none">
-
-    <h2>💰 Ventas</h2>
-
-    <div class="order">
-
-      <strong>Ventas del día</strong>
-
-      <p
-        id="ventasDia"
-        style="font-size:25px;color:#ffae19;margin-top:10px"
-      >
-        $0
-      </p>
 
     </div>
 
-  </div>
+
+    <!-- =================================================
+         PEDIDOS
+    ================================================== -->
+
+    <div
+        id="pedidos"
+        class="section"
+        style="display:none"
+    >
+
+        <button
+            class="btn-refresh"
+            onclick="cargarPedidos()"
+        >
+            🔄 ACTUALIZAR
+        </button>
+
+        <h2>🛒 Pedidos</h2>
+
+        <div id="listaPedidos">
+
+            Cargando pedidos...
+
+        </div>
+
+    </div>
 
 
-  <button class="logout" onclick="salir()">
-    🚪 CERRAR SESIÓN
-  </button>
+    <!-- =================================================
+         PRODUCTOS
+    ================================================== -->
+
+    <div
+        id="productos"
+        class="section"
+        style="display:none"
+    >
+
+        <h2>🍔 Productos</h2>
+
+
+        <div class="form-producto">
+
+            <h3 id="formTitulo">
+                ➕ Agregar producto
+            </h3>
+
+            <input
+                type="hidden"
+                id="productoId"
+            >
+
+            <input
+                type="text"
+                id="productoNombre"
+                placeholder="Nombre del producto"
+            >
+
+            <input
+                type="text"
+                id="productoDescripcion"
+                placeholder="Descripción"
+            >
+
+            <input
+                type="number"
+                id="productoPrecio"
+                placeholder="Precio"
+                min="0"
+            >
+
+            <input
+                type="text"
+                id="productoCategoria"
+                placeholder="Categoría"
+            >
+
+            <input
+                type="url"
+                id="productoImagen"
+                placeholder="URL de la imagen"
+            >
+
+            <label
+                style="
+                    display:block;
+                    margin:12px 0;
+                "
+            >
+
+                <input
+                    type="checkbox"
+                    id="productoDisponible"
+                    checked
+                    style="
+                        width:auto;
+                        margin-right:8px;
+                    "
+                >
+
+                Producto disponible
+
+            </label>
+
+
+            <button
+                class="btn-save"
+                onclick="guardarProducto()"
+            >
+                💾 GUARDAR PRODUCTO
+            </button>
+
+
+            <button
+                class="btn-cancel"
+                onclick="cancelarEdicion()"
+            >
+                ❌ CANCELAR
+            </button>
+
+
+            <p id="productoMensaje"></p>
+
+        </div>
+
+
+        <div class="order">
+
+            <h3>
+                📋 Productos registrados
+            </h3>
+
+            <div id="listaProductos">
+
+                Cargando productos...
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CLIENTES
+    ================================================== -->
+
+    <div
+        id="clientes"
+        class="section"
+        style="display:none"
+    >
+
+        <h2>👥 Clientes</h2>
+
+        <div id="listaClientes">
+
+            Cargando clientes...
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         DOMICILIOS
+    ================================================== -->
+
+    <div
+        id="domicilios"
+        class="section"
+        style="display:none"
+    >
+
+        <button
+            class="btn-refresh"
+            onclick="cargarDomicilios()"
+        >
+            🔄 ACTUALIZAR
+        </button>
+
+        <h2>🚴 Domicilios</h2>
+
+        <div id="listaDomicilios">
+
+            Cargando domicilios...
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         VENTAS
+    ================================================== -->
+
+    <div
+        id="ventas"
+        class="section"
+        style="display:none"
+    >
+
+        <h2>💰 Ventas</h2>
+
+        <div class="order">
+
+            <h3>
+                💵 Ventas del día
+            </h3>
+
+            <p
+                id="ventasDia"
+                style="
+                    font-size:30px;
+                    color:#ffae19;
+                "
+            >
+                $0
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <button
+        class="logout"
+        onclick="salir()"
+    >
+        🚪 CERRAR SESIÓN
+    </button>
 
 </div>
 
@@ -483,1152 +800,455 @@ button{
 <script>
 
 /* =====================================================
-   CONFIGURACIÓN SUPABASE
-   ===================================================== */
+   SUPABASE
+===================================================== */
 
-const SUPABASE_URL = "https://usousnizttfdusajgpdb.supabase.co";
+const SUPABASE_URL =
+"https://usousnizttfdusajgpdb.supabase.co";
 
-const SUPABASE_ANON_KEY = "sb_publishable_90cC7HZUw5Mtm8VhMb9F9w_u-XTP9Ul";
+const SUPABASE_ANON_KEY =
+"sb_publishable_90cC7HZUw5Mtm8VhMb9F9w_u-XTP9Ul";
 
-
-const { createClient } =
-  supabase;
-
-const db = createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+const db =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
 
 
 /* =====================================================
-   ADMINISTRADOR AUTORIZADO
-   ===================================================== */
+   ADMIN
+===================================================== */
 
 const ADMIN_EMAIL =
-  "diariotrabajo8@gmail.com";
+"diariotrabajo8@gmail.com";
 
 
 /* =====================================================
-   INICIAR SESIÓN
-   ===================================================== */
+   LOGIN
+===================================================== */
 
-async function entrar() {
+async function entrar(){
 
-  const usuario = document
-    .getElementById("usuario")
-    .value
-    .trim()
-    .toLowerCase();
+    const usuario =
+        document
+        .getElementById("usuario")
+        .value
+        .trim()
+        .toLowerCase();
 
-  const clave = document
-    .getElementById("clave")
-    .value;
+    const clave =
+        document
+        .getElementById("clave")
+        .value;
 
-  const errorElemento = document.getElementById("error");
-  const loading = document.getElementById("loading");
-  const boton = document.getElementById("btnLogin");
+    const error =
+        document
+        .getElementById("error");
 
-  errorElemento.innerText = "";
+    const loading =
+        document
+        .getElementById("loading");
 
-  if (!usuario || !clave) {
-    errorElemento.innerText =
-      "Ingrese el correo y la contraseña.";
-    return;
-  }
+    const boton =
+        document
+        .getElementById("btnLogin");
 
-  if (usuario !== ADMIN_EMAIL) {
-    errorElemento.innerText =
-      "Este correo no tiene permisos de administrador.";
-    return;
-  }
 
-  boton.disabled = true;
-  loading.style.display = "block";
+    error.innerText = "";
 
-  try {
 
-    const resultado = await db.auth.signInWithPassword({
-      email: usuario,
-      password: clave
-    });
+    if(!usuario || !clave){
 
-    if (resultado.error) {
-      throw resultado.error;
+        error.innerText =
+        "Ingrese el correo y la contraseña.";
+
+        return;
     }
 
-    const usuarioAutenticado = resultado.data.user;
 
-    if (!usuarioAutenticado) {
-      throw new Error(
-        "Supabase no devolvió el usuario autenticado."
-      );
+    if(usuario !== ADMIN_EMAIL){
+
+        error.innerText =
+        "Este correo no tiene permisos de administrador.";
+
+        return;
     }
 
-    if (
-      !usuarioAutenticado.email ||
-      usuarioAutenticado.email.toLowerCase() !== ADMIN_EMAIL
-    ) {
 
-      await db.auth.signOut();
+    boton.disabled = true;
 
-      throw new Error(
-        "Este usuario no tiene permisos de administrador."
-      );
+    loading.style.display =
+        "block";
+
+
+    try{
+
+        const resultado =
+            await db.auth.signInWithPassword({
+
+                email:usuario,
+
+                password:clave
+
+            });
+
+
+        if(resultado.error){
+
+            throw resultado.error;
+
+        }
+
+
+        const user =
+            resultado.data.user;
+
+
+        if(!user){
+
+            throw new Error(
+                "No se pudo obtener el usuario."
+            );
+
+        }
+
+
+        if(
+            !user.email ||
+            user.email.toLowerCase() !==
+            ADMIN_EMAIL
+        ){
+
+            await db.auth.signOut();
+
+            throw new Error(
+                "Usuario no autorizado."
+            );
+
+        }
+
+
+        mostrarDashboard(
+            user.email
+        );
+
+
+    }catch(e){
+
+        console.error(e);
+
+        error.innerText =
+            e.message ||
+            "No se pudo iniciar sesión.";
+
+    }finally{
+
+        boton.disabled = false;
+
+        loading.style.display =
+            "none";
+
     }
 
-    // LOGIN CORRECTO
-    document.getElementById("login").style.display = "none";
+}
 
-    document.getElementById("dashboard").style.display = "block";
 
-    document.getElementById("adminEmail").innerText =
-      "Administrador: " + usuarioAutenticado.email;
+/* =====================================================
+   MOSTRAR DASHBOARD
+===================================================== */
 
-    // Cargar productos
-    cargarProductos();
+function mostrarDashboard(email){
 
-  } catch (e) {
+    document
+        .getElementById("login")
+        .style.display = "none";
 
-    console.error("ERROR LOGIN:", e);
 
-    let mensaje = "No se pudo iniciar sesión.";
+    document
+        .getElementById("dashboard")
+        .style.display = "block";
 
-    if (e && e.message) {
-      mensaje = e.message;
-    }
 
-    errorElemento.innerText = mensaje;
+    document
+        .getElementById("adminEmail")
+        .innerText =
+        "Administrador: " + email;
 
-  } finally {
 
-    boton.disabled = false;
-    loading.style.display = "none";
+    cargarTodo();
 
-  }
 }
 
 
 /* =====================================================
    CAMBIAR SECCIÓN
-   ===================================================== */
+===================================================== */
 
 function mostrar(id){
 
-  const secciones =
-    document.querySelectorAll(".section");
+    const secciones =
+        document.querySelectorAll(".section");
 
 
-  secciones.forEach(function(seccion){
+    secciones.forEach(
+        function(seccion){
 
-    seccion.style.display = "none";
+            seccion.style.display =
+                "none";
 
-  });
-
-
-  const seleccion =
-    document.getElementById(id);
-
-
-  if(seleccion){
-
-    seleccion.style.display = "block";
-
-  }
-
-}
-
-
-/* =====================================================
-   CERRAR SESIÓN
-   ===================================================== */
-
-async function salir(){
-
-  await db.auth.signOut();
-
-
-  document
-    .getElementById("dashboard")
-    .style.display = "none";
-
-
-  document
-    .getElementById("login")
-    .style.display = "block";
-
-
-  document
-    .getElementById("usuario")
-    .value = "";
-
-
-  document
-    .getElementById("clave")
-    .value = "";
-
-
-  document
-    .getElementById("error")
-    .innerText = "";
-
-}/* =====================================================
-   GESTIÓN DE PRODUCTOS
-   ===================================================== */
-
-let productoEditando = null;
-
-
-/* CARGAR PRODUCTOS */
-async function cargarProductos() {
-
-  const lista = document.getElementById("listaProductos");
-
-  if (!lista) return;
-
-  lista.innerHTML = `
-    <p style="text-align:center;color:#bbb;">
-      ⏳ Cargando productos...
-    </p>
-  `;
-
-  const { data, error } = await db
-    .from("productos")
-    .select("*")
-    .order("id", { ascending: false });
-
-  if (error) {
-
-    console.error("Error cargando productos:", error);
-
-    lista.innerHTML = `
-      <div style="
-        background:#3a1717;
-        padding:15px;
-        border-radius:10px;
-        color:#ff8080;">
-        ❌ Error cargando productos.
-        <br>
-        <small>${error.message}</small>
-      </div>
-    `;
-
-    return;
-  }
-
-  if (!data || data.length === 0) {
-
-    lista.innerHTML = `
-      <div style="
-        background:#222;
-        padding:25px;
-        border-radius:12px;
-        text-align:center;
-        color:#bbb;">
-        🍔 Todavía no hay productos.
-        <br><br>
-        Agrega tu primer producto.
-      </div>
-    `;
-
-    return;
-  }
-
-  lista.innerHTML = data.map(producto => {
-
-    const precio = Number(producto.precio || 0)
-      .toLocaleString("es-CO");
-
-    const disponible = producto.disponible !== false;
-
-    return `
-      <div style="
-        background:#191919;
-        border:1px solid #333;
-        border-radius:15px;
-        padding:15px;
-        margin:12px 0;
-        display:flex;
-        gap:15px;
-        align-items:center;
-        flex-wrap:wrap;
-      ">
-
-        ${
-          producto.imagen_url
-          ?
-          `<img
-             src="${producto.imagen_url}"
-             alt="${producto.nombre || "Producto"}"
-             style="
-               width:90px;
-               height:90px;
-               object-fit:cover;
-               border-radius:12px;
-               border:1px solid #444;
-             "
-             onerror="this.style.display='none';">`
-          :
-          `<div style="
-             width:90px;
-             height:90px;
-             background:#333;
-             border-radius:12px;
-             display:flex;
-             align-items:center;
-             justify-content:center;
-             font-size:35px;">
-             🍔
-           </div>`
         }
-
-        <div style="flex:1;min-width:200px;">
-
-          <h3 style="
-            margin:0 0 5px;
-            color:#ffae19;">
-            ${producto.nombre || "Sin nombre"}
-          </h3>
-
-          <p style="
-            margin:5px 0;
-            color:#ccc;">
-            ${producto.descripcion || "Sin descripción"}
-          </p>
-
-          <p style="
-            margin:5px 0;
-            color:white;">
-            🏷️ ${producto.categoria || "Sin categoría"}
-          </p>
-
-          <strong style="
-            color:#ffae19;
-            font-size:18px;">
-            💰 $${precio}
-          </strong>
-
-          <span style="
-            margin-left:10px;
-            color:${disponible ? "#55d66b" : "#ff5555"};">
-            ${disponible ? "🟢 Disponible" : "🔴 Agotado"}
-          </span>
-
-        </div>
-
-        <div style="
-          display:flex;
-          gap:8px;
-          flex-wrap:wrap;">
-
-          <button
-            type="button"
-            onclick="editarProducto(${producto.id})"
-            style="background:#1976d2;color:white;">
-            ✏️ EDITAR
-          </button>
-
-          <button
-            type="button"
-            onclick="cambiarDisponibilidad(${producto.id}, ${disponible})"
-            style="
-              background:${disponible ? "#777" : "#28a745"};
-              color:white;">
-            ${disponible ? "🔴 DESACTIVAR" : "🟢 ACTIVAR"}
-          </button>
-
-          <button
-            type="button"
-            onclick="eliminarProducto(${producto.id})"
-            style="background:#dc3545;color:white;">
-            🗑️ ELIMINAR
-          </button>
-
-        </div>
-
-      </div>
-    `;
-
-  }).join("");
-
-}
-
-
-/* MOSTRAR FORMULARIO */
-function mostrarFormularioProducto() {
-
-  productoEditando = null;
-
-  document.getElementById("productoId").value = "";
-  document.getElementById("productoNombre").value = "";
-  document.getElementById("productoDescripcion").value = "";
-  document.getElementById("productoPrecio").value = "";
-  document.getElementById("productoCategoria").value = "";
-  document.getElementById("productoImagen").value = "";
-  document.getElementById("productoDisponible").checked = true;
-
-  document.getElementById("tituloFormulario").innerText =
-    "➕ Nuevo producto";
-
-  document.getElementById("formProducto").style.display = "block";
-
-  window.scrollTo({
-    top: document.getElementById("formProducto").offsetTop,
-    behavior: "smooth"
-  });
-
-}
-
-
-/* CANCELAR */
-function cancelarProducto() {
-
-  productoEditando = null;
-
-  document.getElementById("formProducto").style.display = "none";
-
-}
-
-
-/* GUARDAR PRODUCTO */
-async function guardarProducto() {
-
-  const nombre =
-    document.getElementById("productoNombre").value.trim();
-
-  const descripcion =
-    document.getElementById("productoDescripcion").value.trim();
-
-  const precio =
-    Number(document.getElementById("productoPrecio").value);
-
-  const categoria =
-    document.getElementById("productoCategoria").value.trim();
-
-  const imagen =
-    document.getElementById("productoImagen").value.trim();
-
-  const disponible =
-    document.getElementById("productoDisponible").checked;
-
-
-  if (!nombre) {
-    alert("⚠️ Escribe el nombre del producto.");
-    return;
-  }
-
-  if (!precio || precio < 0) {
-    alert("⚠️ Escribe un precio válido.");
-    return;
-  }
-
-  if (!categoria) {
-    alert("⚠️ Escribe la categoría.");
-    return;
-  }
-
-
-  const producto = {
-
-    nombre: nombre,
-
-    descripcion: descripcion || null,
-
-    precio: precio,
-
-    categoria: categoria,
-
-    imagen_url: imagen || null,
-
-    disponible: disponible
-
-  };
-
-
-  let resultado;
-
-
-  if (productoEditando) {
-
-    resultado = await db
-      .from("productos")
-      .update(producto)
-      .eq("id", productoEditando);
-
-  } else {
-
-    resultado = await db
-      .from("productos")
-      .insert([producto]);
-
-  }
-
-
-  if (resultado.error) {
-
-    console.error(resultado.error);
-
-    alert(
-      "❌ No se pudo guardar el producto:\n\n" +
-      resultado.error.message
     );
 
-    return;
-  }
+
+    const seleccion =
+        document.getElementById(id);
 
 
-  alert(
-    productoEditando
-      ? "✅ Producto actualizado correctamente."
-      : "✅ Producto agregado correctamente."
-  );
+    if(seleccion){
+
+        seleccion.style.display =
+            "block";
+
+    }
 
 
-  cancelarProducto();
+    if(id === "pedidos"){
 
-  await cargarProductos();
+        cargarPedidos();
 
-}
-
-
-/* EDITAR PRODUCTO */
-async function editarProducto(id) {
-
-  const { data, error } = await db
-    .from("productos")
-    .select("*")
-    .eq("id", id)
-    .single();
+    }
 
 
-  if (error) {
+    if(id === "productos"){
 
-    alert(
-      "❌ No se pudo cargar el producto:\n\n" +
-      error.message
-    );
+        cargarProductos();
 
-    return;
-  }
+    }
 
 
-  productoEditando = id;
+    if(id === "clientes"){
+
+        cargarClientes();
+
+    }
 
 
-  document.getElementById("productoId").value = data.id || "";
+    if(id === "domicilios"){
 
-  document.getElementById("productoNombre").value =
-    data.nombre || "";
+        cargarDomicilios();
 
-  document.getElementById("productoDescripcion").value =
-    data.descripcion || "";
-
-  document.getElementById("productoPrecio").value =
-    data.precio || "";
-
-  document.getElementById("productoCategoria").value =
-    data.categoria || "";
-
-  document.getElementById("productoImagen").value =
-    data.imagen_url || "";
-
-  document.getElementById("productoDisponible").checked =
-    data.disponible !== false;
+    }
 
 
-  document.getElementById("tituloFormulario").innerText =
-    "✏️ Editar producto";
+    if(id === "ventas"){
 
+        cargarVentas();
 
-  document.getElementById("formProducto").style.display =
-    "block";
-
-
-  window.scrollTo({
-    top: document.getElementById("formProducto").offsetTop,
-    behavior: "smooth"
-  });
+    }
 
 }
-
-
-/* ACTIVAR / DESACTIVAR */
-async function cambiarDisponibilidad(id, estadoActual) {
-
-  const nuevoEstado = !estadoActual;
-
-
-  const confirmar = confirm(
-    nuevoEstado
-      ? "¿Activar este producto?"
-      : "¿Desactivar este producto?"
-  );
-
-
-  if (!confirmar) return;
-
-
-  const { error } = await db
-    .from("productos")
-    .update({
-      disponible: nuevoEstado
-    })
-    .eq("id", id);
-
-
-  if (error) {
-
-    alert(
-      "❌ No se pudo cambiar el estado:\n\n" +
-      error.message
-    );
-
-    return;
-  }
-
-
-  await cargarProductos();
-
-}
-
-
-/* ELIMINAR PRODUCTO */
-async function eliminarProducto(id) {
-
-  const confirmar = confirm(
-    "⚠️ ¿Está seguro de eliminar este producto?\n\n" +
-    "Esta acción no se puede deshacer."
-  );
-
-
-  if (!confirmar) return;
-
-
-  const { error } = await db
-    .from("productos")
-    .delete()
-    .eq("id", id);
-
-
-  if (error) {
-
-    alert(
-      "❌ No se pudo eliminar el producto:\n\n" +
-      error.message
-    );
-
-    return;
-  }
-
-
-  alert("✅ Producto eliminado correctamente.");
-
-  await cargarProductos();
-
-                           
 
 
 /* =====================================================
-   COMPROBAR SESIÓN AL ABRIR LA PÁGINA
-   ===================================================== */
+   CARGAR TODO
+===================================================== */
 
-async function comprobarSesion(){
+async function cargarTodo(){
 
-  const {
-    data
-  } = await db.auth.getSession();
+    await cargarPedidos();
 
+    await cargarProductos();
 
-  const session =
-    data.session;
+    await cargarClientes();
 
+    await cargarDomicilios();
 
-  if(
-    session &&
-    session.user &&
-    session.user.email &&
-    session.user.email.toLowerCase()
-      === ADMIN_EMAIL
-  ){
+    await cargarVentas();
 
-    document
-      .getElementById("login")
-      .style.display = "none";
-
-
-    document
-      .getElementById("dashboard")
-      .style.display = "block";
-
-
-    document
-      .getElementById("adminEmail")
-      .innerText =
-        "Administrador: " +
-        session.user.email;
-
-  }
+    await actualizarResumen();
 
 }
 
 
-/* Ejecutar al cargar */
-
-comprobarSesion();
 /* =====================================================
-   GESTIÓN DE PRODUCTOS
-   ===================================================== */
+   PEDIDOS
+===================================================== */
 
-async function cargarProductos(){
+async function cargarPedidos(){
 
-    const lista = document.getElementById("listaProductos");
+    const lista =
+        document.getElementById(
+            "listaPedidos"
+        );
 
     if(!lista) return;
 
-    lista.innerHTML = "⏳ Cargando productos...";
 
-    const { data, error } = await db
-        .from("productos")
+    lista.innerHTML =
+        "⏳ Cargando pedidos...";
+
+
+    const {data,error} =
+        await db
+        .from("pedidos")
         .select("*")
-        .order("id", { ascending:false });
+        .order(
+            "id",
+            {
+                ascending:false
+            }
+        );
+
 
     if(error){
 
         console.error(error);
 
         lista.innerHTML =
-            "❌ Error cargando productos:<br>" +
-            error.message;
+        `
+        <div class="order">
+            ❌ Error cargando pedidos
+            <br><br>
+            ${error.message}
+        </div>
+        `;
 
         return;
+
     }
+
 
     if(!data || data.length === 0){
 
         lista.innerHTML =
-            "<p>No hay productos registrados.</p>";
+        `
+        <div class="order">
+            📦 No hay pedidos registrados todavía.
+        </div>
+        `;
 
         return;
+
     }
 
-    lista.innerHTML = "";
 
-    data.forEach(producto => {
+    lista.innerHTML =
+        data.map(
+            pedido => {
 
-        const tarjeta = document.createElement("div");
+                const nombre =
+                    pedido.nombre ||
+                    pedido.cliente_nombre ||
+                    "Cliente";
 
-        tarjeta.className = "order";
 
-        tarjeta.style.marginTop = "12px";
-        tarjeta.style.textAlign = "left";
+                const telefono =
+                    pedido.telefono ||
+                    pedido.cliente_telefono ||
+                    "Sin teléfono";
 
-        tarjeta.innerHTML = `
 
-            <div style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;">
+                const direccion =
+                    pedido.direccion ||
+                    pedido.cliente_direccion ||
+                    "Sin dirección";
 
-                ${
-                    producto.imagen_url
-                    ?
-                    `<img
-                        src="${producto.imagen_url}"
-                        style="
-                            width:90px;
-                            height:90px;
-                            object-fit:cover;
-                            border-radius:12px;
-                        "
-                        onerror="this.style.display='none'"
-                    >`
-                    :
-                    `<div style="
-                        width:90px;
-                        height:90px;
-                        border-radius:12px;
-                        background:#333;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        font-size:35px;
-                    ">🍔</div>`
-                }
 
-                <div style="flex:1;min-width:200px;">
+                const total =
+                    Number(
+                        pedido.total || 0
+                    )
+                    .toLocaleString(
+                        "es-CO"
+                    );
 
-                    <h3 style="margin:0;color:#ffae19;">
-                        ${producto.nombre || "Sin nombre"}
+
+                const estado =
+                    pedido.estado ||
+                    "Pendiente";
+
+
+                return `
+
+                <div class="order">
+
+                    <h3>
+                        🛒 Pedido #${pedido.id}
                     </h3>
 
-                    <p style="margin:6px 0;">
-                        ${producto.descripcion || "Sin descripción"}
+                    <p>
+                        👤 ${nombre}
                     </p>
 
-                    <strong style="font-size:20px;">
-                        $${Number(producto.precio || 0).toLocaleString("es-CO")}
-                    </strong>
+                    <p>
+                        📞 ${telefono}
+                    </p>
 
-                    <p style="margin:5px 0;">
-                        📂 ${producto.categoria || "Sin categoría"}
+                    <p>
+                        📍 ${direccion}
+                    </p>
+
+                    <p>
+                        💰
+                        <strong
+                            style="color:#ffae19"
+                        >
+                            $${total}
+                        </strong>
                     </p>
 
                     <span class="status">
-                        ${
-                            producto.disponible
-                            ? "🟢 Disponible"
-                            : "🔴 No disponible"
-                        }
+                        ${estado}
                     </span>
 
                 </div>
 
-            </div>
+                `;
 
-            <div style="
-                display:flex;
-                gap:8px;
-                flex-wrap:wrap;
-                margin-top:15px;
-            ">
-
-                <button
-                    type="button"
-                    onclick="editarProducto(${producto.id})"
-                    style="background:#3498db;color:white;"
-                >
-                    ✏️ EDITAR
-                </button>
-
-                <button
-                    type="button"
-                    onclick="cambiarDisponibilidad(${producto.id}, ${producto.disponible})"
-                    style="background:#777;color:white;"
-                >
-                    ${
-                        producto.disponible
-                        ? "🔴 DESACTIVAR"
-                        : "🟢 ACTIVAR"
-                    }
-                </button>
-
-                <button
-                    type="button"
-                    onclick="eliminarProducto(${producto.id})"
-                    style="background:#e53935;color:white;"
-                >
-                    🗑️ ELIMINAR
-                </button>
-
-            </div>
-        `;
-
-        lista.appendChild(tarjeta);
-
-    });
+            }
+        ).join("");
 
 }
 
 
 /* =====================================================
-   GUARDAR PRODUCTO
-   ===================================================== */
+   REALTIME PEDIDOS
+===================================================== */
 
-async function guardarProducto(){
+function escucharPedidos(){
 
-    const id =
-        document.getElementById("productoId").value;
+    db.channel(
+        "pedidos-tiempo-real"
+    )
 
-    const nombre =
-        document.getElementById("productoNombre").value.trim();
+    .on(
 
-    const descripcion =
-        document.getElementById("productoDescripcion").value.trim();
+        "postgres_changes",
 
-    const precio =
-        Number(document.getElementById("productoPrecio").value);
+        {
+            event:"*",
+            schema:"public",
+            table:"pedidos"
+        },
 
-    const categoria =
-        document.getElementById("productoCategoria").value.trim();
+        function(payload){
 
-    const imagen_url =
-        document.getElementById("productoImagen").value.trim();
+            console.log(
+                "📦 Cambio:",
+                payload
+            );
 
-    const disponible =
-        document.getElementById("productoDisponible").checked;
 
-    const mensaje =
-        document.getElementById("productoMensaje");
+            mostrarNotificacion();
 
 
-    if(!nombre){
+            cargarPedidos();
 
-        mensaje.innerText =
-            "⚠️ Escriba el nombre del producto.";
+            actualizarResumen();
 
-        return;
-    }
+            cargarDomicilios();
 
-    if(!precio || precio < 0){
+            cargarVentas();
 
-        mensaje.innerText =
-            "⚠️ Escriba un precio válido.";
-
-        return;
-    }
-
-
-    const producto = {
-
-        nombre: nombre,
-
-        descripcion:
-            descripcion || null,
-
-        precio: precio,
-
-        categoria:
-            categoria || null,
-
-        imagen_url:
-            imagen_url || null,
-
-        disponible:
-            disponible
-
-    };
-
-
-    mensaje.innerText =
-        "⏳ Guardando...";
-
-
-    let resultado;
-
-
-    if(id){
-
-        resultado = await db
-            .from("productos")
-            .update(producto)
-            .eq("id", Number(id));
-
-    }else{
-
-        resultado = await db
-            .from("productos")
-            .insert([producto]);
-
-    }
-
-
-    if(resultado.error){
-
-        console.error(resultado.error);
-
-        mensaje.innerText =
-            "❌ Error: " +
-            resultado.error.message;
-
-        return;
-    }
-
-
-    mensaje.innerText =
-        "✅ Producto guardado correctamente.";
-
-    limpiarFormulario();
-
-    await cargarProductos();
-
-}
-
-
-/* =====================================================
-   EDITAR PRODUCTO
-   ===================================================== */
-
-async function editarProducto(id){
-
-    const { data, error } = await db
-        .from("productos")
-        .select("*")
-        .eq("id", id)
-        .single();
-
-
-    if(error){
-
-        alert(
-            "❌ No se pudo cargar el producto:\n" +
-            error.message
-        );
-
-        return;
-    }
-
-
-    document.getElementById("productoId").value =
-        data.id;
-
-    document.getElementById("productoNombre").value =
-        data.nombre || "";
-
-    document.getElementById("productoDescripcion").value =
-        data.descripcion || "";
-
-    document.getElementById("productoPrecio").value =
-        data.precio || "";
-
-    document.getElementById("productoCategoria").value =
-        data.categoria || "";
-
-    document.getElementById("productoImagen").value =
-        data.imagen_url || "";
-
-    document.getElementById("productoDisponible").checked =
-        data.disponible !== false;
-
-
-    document.getElementById("formTitulo").innerText =
-        "✏️ Editando producto";
-
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
-
-}
-
-
-/* =====================================================
-   CAMBIAR DISPONIBILIDAD
-   ===================================================== */
-
-async function cambiarDisponibilidad(id, estadoActual){
-
-    const nuevoEstado =
-        !estadoActual;
-
-
-    const { error } = await db
-        .from("productos")
-        .update({
-            disponible:nuevoEstado
-        })
-        .eq("id", id);
-
-
-    if(error){
-
-        alert(
-            "❌ No se pudo cambiar el estado:\n" +
-            error.message
-        );
-
-        return;
-    }
-
-
-    await cargarProductos();
-
-}
-
-
-/* =====================================================
-   ELIMINAR PRODUCTO
-   ===================================================== */
-
-async function eliminarProducto(id){
-
-    const confirmar =
-        confirm(
-            "⚠️ ¿Está seguro de eliminar este producto?"
-        );
-
-
-    if(!confirmar) return;
-
-
-    const { error } = await db
-        .from("productos")
-        .delete()
-        .eq("id", id);
-
-
-    if(error){
-
-        alert(
-            "❌ No se pudo eliminar:\n" +
-            error.message
-        );
-
-        return;
-    }
-
-
-    alert(
-        "✅ Producto eliminado correctamente."
-    );
-
-
-    await cargarProductos();
-
-}
-
-
-/* =====================================================
-   LIMPIAR FORMULARIO
-   ===================================================== */
-
-function limpiarFormulario(){
-
-    document.getElementById("productoId").value = "";
-
-    document.getElementById("productoNombre").value = "";
-
-    document.getElementById("productoDescripcion").value = "";
-
-    document.getElementById("productoPrecio").value = "";
-
-    document.getElementById("productoCategoria").value = "";
-
-    document.getElementById("productoImagen").value = "";
-
-    document.getElementById("productoDisponible").checked = true;
-
-    document.getElementById("formTitulo").innerText =
-        "➕ Agregar producto";
-
-}
-
-
-/* =====================================================
-   CANCELAR EDICIÓN
-   ===================================================== */
-
-function cancelarEdicion(){
-
-    limpiarFormulario();
-
-    const mensaje =
-        document.getElementById("productoMensaje");
-
-    if(mensaje){
-
-        mensaje.innerText = "";
-
-    }
-
-}
-
-
-/* =====================================================
-   CARGAR PRODUCTOS AL ABRIR PRODUCTOS
-   ===================================================== */
-
-document.addEventListener("DOMContentLoaded", function(){
-
-    cargarProductos();
-
-});
-</script>
-
-</body>
-  </html>
+  
