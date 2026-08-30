@@ -1561,120 +1561,260 @@ async function eliminarProducto(id){
 
 async function cargarClientes(){
 
+async function cargarClientes(){
+
     const lista =
-        document.getElementById(
-            "listaClientes"
-        );
+        document.getElementById("listaClientes");
 
-
-    if(!lista){
-        return;
-    }
-
+    if(!lista) return;
 
     lista.innerHTML =
         "⏳ Cargando clientes...";
 
+    try{
 
-    /*
-       Primero intentamos obtener clientes
-       desde una tabla llamada clientes.
-    */
+        const { data, error } =
+            await db
+            .from("clientes")
+            .select(`
+                id,
+                nombre,
+                telefono,
+                direccion,
+                created_at,
+                tarjetas_fidelidad (
+                    id,
+                    codigo,
+                    sellos,
+                    meta_sellos,
+                    activa
+                ),
+                pedidos (
+                    id,
+                    total,
+                    estado,
+                    created_at
+                )
+            `)
+            .order(
+                "id",
+                {
+                    ascending:false
+                }
+            );
 
-    const {
-        data,
-        error
-    } =
-    await db
-    .from("clientes")
-    .select("*")
-    .order(
-        "id",
-        {
-            ascending:false
+        if(error){
+
+            console.error(
+                "ERROR CLIENTES:",
+                error
+            );
+
+            lista.innerHTML = `
+                <div class="order">
+                    ❌ Error cargando clientes.
+                    <br><br>
+                    ${escapeHTML(error.message)}
+                </div>
+            `;
+
+            return;
         }
-    );
 
+        if(!data || data.length === 0){
 
-    if(error){
+            lista.innerHTML = `
+                <div class="order">
+                    👥 No hay clientes registrados todavía.
+                </div>
+            `;
 
-        console.error(
-            "CLIENTES:",
-            error
-        );
+            return;
+        }
 
+        lista.innerHTML =
+            data.map(
+                cliente =>
+                    crearTarjetaCliente(cliente)
+            ).join("");
+
+    }catch(error){
+
+        console.error(error);
 
         lista.innerHTML = `
             <div class="order">
-                👥 No se pudo cargar la tabla clientes.
+                ❌ Ocurrió un error cargando los clientes.
                 <br><br>
                 ${escapeHTML(error.message)}
             </div>
         `;
 
-        return;
-
     }
-
-
-    if(!data || data.length === 0){
-
-        lista.innerHTML = `
-            <div class="order">
-                👥 No hay clientes registrados.
-            </div>
-        `;
-
-        return;
-
-    }
-
-
-    lista.innerHTML =
-        data
-        .map(function(cliente){
-
-            const nombre =
-                cliente.nombre ||
-                cliente.nombre_completo ||
-                "Cliente";
-
-
-            const telefono =
-                cliente.telefono ||
-                "Sin teléfono";
-
-
-            const email =
-                cliente.email ||
-                cliente.correo ||
-                "Sin correo";
-
-
-            return `
-
-            <div class="order">
-
-                <h3>
-                    👤 ${escapeHTML(nombre)}
-                </h3>
-
-                <p>
-                    📞 ${escapeHTML(telefono)}
-                </p>
-
-                <p>
-                    📧 ${escapeHTML(email)}
-                </p>
-
-            </div>
-
-            `;
-
-        })
-        .join("");
 
 }
+   function crearTarjetaCliente(cliente){
+
+    const pedidos =
+        cliente.pedidos || [];
+
+    const totalPedidos =
+        pedidos.length;
+
+    const totalComprado =
+        pedidos.reduce(
+            (suma, pedido) =>
+                suma + Number(
+                    pedido.total || 0
+                ),
+            0
+        );
+
+    const totalFormateado =
+        totalComprado.toLocaleString(
+            "es-CO"
+        );
+
+    const tarjeta =
+        cliente.tarjetas_fidelidad &&
+        cliente.tarjetas_fidelidad.length > 0
+        ?
+        cliente.tarjetas_fidelidad[0]
+        :
+        null;
+
+    const sellos =
+        tarjeta
+        ?
+        tarjeta.sellos
+        :
+        0;
+
+    const meta =
+        tarjeta
+        ?
+        tarjeta.meta_sellos
+        :
+        10;
+
+    const codigo =
+        tarjeta
+        ?
+        tarjeta.codigo
+        :
+        "Sin tarjeta";
+
+    const activa =
+        tarjeta
+        ?
+        tarjeta.activa
+        :
+        false;
+
+    return `
+
+    <div class="order">
+
+        <h3>
+            👤 ${escapeHTML(
+                cliente.nombre
+            )}
+        </h3>
+
+        <p>
+            📱
+            ${escapeHTML(
+                cliente.telefono
+            )}
+        </p>
+
+        <p>
+            📍
+            ${escapeHTML(
+                cliente.direccion
+            )}
+        </p>
+
+        <p>
+            🛒
+            <strong>
+                ${totalPedidos}
+            </strong>
+            pedido(s)
+        </p>
+
+        <p>
+            💰
+            <strong
+                style="color:#ffae19"
+            >
+                $${totalFormateado}
+            </strong>
+            comprado
+        </p>
+
+        <div
+            style="
+                margin-top:15px;
+                padding:15px;
+                background:#191919;
+                border-radius:12px;
+                border:1px solid #333;
+            "
+        >
+
+            <h3>
+                🎫 Fidelidad
+            </h3>
+
+            <p>
+                🔑 Código:
+                <strong>
+                    ${escapeHTML(codigo)}
+                </strong>
+            </p>
+
+            <p>
+                ⭐ Sellos:
+                <strong
+                    style="color:#ffae19"
+                >
+                    ${sellos} / ${meta}
+                </strong>
+            </p>
+
+            <p>
+                ${
+                    activa
+                    ?
+                    "🟢 Tarjeta activa"
+                    :
+                    "🔴 Tarjeta inactiva"
+                }
+            </p>
+
+        </div>
+
+        <button
+            onclick="
+                verHistorialCliente(
+                    ${cliente.id}
+                )
+            "
+            style="
+                background:#1976d2;
+                color:white;
+                margin-top:15px;
+            "
+        >
+            📋 VER HISTORIAL
+        </button>
+
+    </div>
+
+    `;
+
+   }
 
 
 /* =====================================================
