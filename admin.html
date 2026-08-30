@@ -512,16 +512,21 @@ const ADMIN_EMAIL =
    INICIAR SESIÓN
    ===================================================== */
 
-  async function entrar() {
+async function entrar() {
 
-  const usuarioInput = document.getElementById("usuario");
-  const claveInput = document.getElementById("clave");
+  const usuario = document
+    .getElementById("usuario")
+    .value
+    .trim()
+    .toLowerCase();
+
+  const clave = document
+    .getElementById("clave")
+    .value;
+
   const errorElemento = document.getElementById("error");
   const loading = document.getElementById("loading");
   const boton = document.getElementById("btnLogin");
-
-  const usuario = usuarioInput.value.trim().toLowerCase();
-  const clave = claveInput.value;
 
   errorElemento.innerText = "";
 
@@ -531,44 +536,37 @@ const ADMIN_EMAIL =
     return;
   }
 
+  if (usuario !== ADMIN_EMAIL) {
+    errorElemento.innerText =
+      "Este correo no tiene permisos de administrador.";
+    return;
+  }
+
   boton.disabled = true;
   loading.style.display = "block";
-  loading.innerText = "Verificando acceso...";
 
   try {
 
-    // Verificar correo autorizado
-    if (usuario !== ADMIN_EMAIL.toLowerCase()) {
-      throw new Error(
-        "Este correo no tiene permisos de administrador."
-      );
-    }
-
-    // Iniciar sesión en Supabase
     const resultado = await db.auth.signInWithPassword({
       email: usuario,
       password: clave
     });
 
     if (resultado.error) {
+      throw resultado.error;
+    }
+
+    const usuarioAutenticado = resultado.data.user;
+
+    if (!usuarioAutenticado) {
       throw new Error(
-        resultado.error.message
+        "Supabase no devolvió el usuario autenticado."
       );
     }
 
-    if (!resultado.data || !resultado.data.user) {
-      throw new Error(
-        "Supabase no devolvió un usuario válido."
-      );
-    }
-
-    const usuarioSupabase = resultado.data.user;
-
-    // Verificar nuevamente el correo
     if (
-      !usuarioSupabase.email ||
-      usuarioSupabase.email.toLowerCase() !==
-      ADMIN_EMAIL.toLowerCase()
+      !usuarioAutenticado.email ||
+      usuarioAutenticado.email.toLowerCase() !== ADMIN_EMAIL
     ) {
 
       await db.auth.signOut();
@@ -584,20 +582,22 @@ const ADMIN_EMAIL =
     document.getElementById("dashboard").style.display = "block";
 
     document.getElementById("adminEmail").innerText =
-      "Administrador: " + usuarioSupabase.email;
-
-    errorElemento.innerText = "";
+      "Administrador: " + usuarioAutenticado.email;
 
     // Cargar productos
     cargarProductos();
 
-  } catch (err) {
+  } catch (e) {
 
-    console.error("ERROR LOGIN:", err);
+    console.error("ERROR LOGIN:", e);
 
-    errorElemento.innerText =
-      err.message ||
-      "No se pudo iniciar sesión.";
+    let mensaje = "No se pudo iniciar sesión.";
+
+    if (e && e.message) {
+      mensaje = e.message;
+    }
+
+    errorElemento.innerText = mensaje;
 
   } finally {
 
@@ -605,7 +605,6 @@ const ADMIN_EMAIL =
     loading.style.display = "none";
 
   }
-
 }
 
 
