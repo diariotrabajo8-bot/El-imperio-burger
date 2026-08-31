@@ -1030,6 +1030,122 @@ function buscar(){
 actualizarCarrito();
 
 </script>
+    /* =====================================================
+   TARJETA DE FIDELIDAD
+===================================================== */
 
+function mostrarFidelidad(sellos = 0){
+
+    const contenedor =
+        document.getElementById("sellosFidelidad");
+
+    const contador =
+        document.getElementById("contadorSellos");
+
+    const mensaje =
+        document.getElementById("mensajeFidelidad");
+
+    if(!contenedor) return;
+
+    sellos = Math.max(0, Math.min(10, Number(sellos)));
+
+    contenedor.innerHTML = "";
+
+    for(let i = 1; i <= 10; i++){
+
+        const sello =
+            document.createElement("div");
+
+        sello.style.cssText = `
+            width:50px;
+            height:50px;
+            margin:auto;
+            border-radius:50%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:22px;
+            border:2px solid #ffae19;
+            background:${i <= sellos ? "#ffae19" : "#222"};
+            color:${i <= sellos ? "#111" : "#777"};
+        `;
+
+        sello.innerHTML =
+            i <= sellos ? "🍔" : i;
+
+        contenedor.appendChild(sello);
+    }
+
+    contador.innerText =
+        `${sellos} / 10 sellos`;
+
+    if(sellos >= 10){
+
+        mensaje.innerHTML =
+            "🎉 <strong style='color:#ffae19'>¡RECOMPENSA DISPONIBLE!</strong>";
+
+    }else{
+
+        const faltan =
+            10 - sellos;
+
+        mensaje.innerText =
+            `Te faltan ${faltan} sello${faltan === 1 ? "" : "s"} para tu recompensa.`;
+
+    }
+
+}
+<!-- =====================================================
+     TARJETA DE FIDELIDAD
+===================================================== -->
+
+<section id="fidelidad" style="
+    max-width:500px;
+    margin:25px auto;
+    padding:25px;
+    background:#171717;
+    border:1px solid #333;
+    border-radius:20px;
+    color:white;
+    text-align:center;
+">
+
+    <h2 style="
+        color:#ffae19;
+        margin-bottom:10px;
+    ">
+        🍔 Mi tarjeta de fidelidad
+    </h2>
+
+    <p style="
+        color:#bbb;
+        margin-bottom:20px;
+    ">
+        Acumula 10 sellos y recibe una recompensa 🎁
+    </p>
+
+    <div id="sellosFidelidad" style="
+        display:grid;
+        grid-template-columns:repeat(5,1fr);
+        gap:10px;
+        margin:20px 0;
+    ">
+    </div>
+
+    <h3 id="contadorSellos" style="
+        color:#ffae19;
+        font-size:24px;
+        margin:15px 0;
+    ">
+        0 / 10 sellos
+    </h3>
+
+    <p id="mensajeFidelidad" style="
+        color:#ccc;
+    ">
+        Realiza tu primera compra para comenzar.
+    </p>
+
+</section>
 </body>
 </html>
